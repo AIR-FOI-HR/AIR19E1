@@ -1,67 +1,103 @@
 package com.cbd.teammate;
 
-import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
+import com.cbd.maps.LocationProvider;
 
+public class MainActivity extends AppCompatActivity {
 
-// Testing Google Play Services --> No real code implemented here
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+    // These are Google Services needed to
+    // obtain the location and update it
+    private final static int ALL_PERMISSIONS_RESULT = 101;
 
-    GoogleApiClient mGoogleApiClient;
+    LocationProvider lp;
+
+    Button button;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .build();
+        lp = new LocationProvider();
+        lp.setup(this, this);
 
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        showMessageOKCancel("Connection failed", new DialogInterface.OnClickListener() {
+        textView = findViewById(R.id.location);
+        button = findViewById(R.id.getlocation);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
+            public void onClick(View view) {
+                textView.setText(lp.getLatLng().toString());
             }
         });
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        showMessageOKCancel("Connection succeeded", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-            }
-        });
+        switch (requestCode) {
+            case ALL_PERMISSIONS_RESULT:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this,
+                            "This app requires location permissions to be granted",
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+        }
+
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
+    protected void onResume() {
+        super.onResume();
 
+        lp.resumeLocationUpdates();
     }
 
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(MainActivity.this)
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        lp.pauseLocationUpdates();
     }
+
+    /*@Override
+    protected void onStart() {
+        super.onStart();
+
+        if (lp.getmGoogleApiClient() != null) {
+            lp.getmGoogleApiClient().connect();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (lp.getmGoogleApiClient() != null) {
+            lp.getmGoogleApiClient().disconnect();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (lp.getmGoogleApiClient().isConnected())
+            lp.getmGoogleApiClient().disconnect();
+
+        lp.removeLocationUpdates();
+    }*/
+
 }

@@ -1,2 +1,2 @@
-include ':app', ':core', ':webservice', ':database'
+include ':app', ':core', ':webservice', ':database', ':maps'
 rootProject.name='TeamMate'
