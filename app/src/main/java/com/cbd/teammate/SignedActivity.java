@@ -11,13 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cbd.maps.LocationProvider;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserInfo;
 
 public class SignedActivity extends AppCompatActivity {
+
     private TextView nameofuser;
 
 
@@ -57,10 +54,6 @@ public class SignedActivity extends AppCompatActivity {
         } catch (NullPointerException e) {
             nameofuser = (TextView) findViewById(R.id.user_name);
             nameofuser.setText("null");
-            FirebaseAuth.getInstance().signOut();
-
-            startActivity(new Intent(this, RegisterActivity.class));
-            finish();
         }
 
         lp = new LocationProvider();
@@ -76,8 +69,7 @@ public class SignedActivity extends AppCompatActivity {
         }
         startActivity(new Intent(this, RegisterActivity.class));
         finish();
-      //  FirebaseAuth.getInstance().signOut();
-        //finish();
+
     }
 
     @Override

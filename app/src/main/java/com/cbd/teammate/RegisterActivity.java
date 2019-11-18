@@ -28,7 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 public class RegisterActivity extends AppCompatActivity {
-    private EditText inputEmail, inputPassword, inputUsername;
+    private EditText inputEmail, inputPassword, inputPasswordConf;
     private ProgressBar progressBar;
 
     private FirebaseAuth mAuth;
@@ -42,9 +42,10 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
-        inputUsername = (EditText) findViewById(R.id.username);
+        inputPasswordConf = (EditText) findViewById(R.id.confirm_password);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         //Firebase instance
@@ -97,15 +98,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     // clicking on register button, checks if fields are not empty, minimum length of password
     public void onRegisterClicked(View view){
-        String emailInput = inputEmail.getText().toString().trim();
-        String password = inputPassword.getText().toString().trim();
-        final String username = inputUsername.getText().toString().trim();
+        String emailInput = this.inputEmail.getText().toString().trim();
+        String password = this.inputPassword.getText().toString().trim();
+        String passwordConf = this.inputPasswordConf.getText().toString().trim();
+
         boolean check = false;
 
-        if (TextUtils.isEmpty(username)) {
-            Toast.makeText(getApplicationContext(), "Enter username", Toast.LENGTH_SHORT).show();
-            check = true;
-        }
 
         if (TextUtils.isEmpty(emailInput)) {
             Toast.makeText(getApplicationContext(), "Enter e-mail", Toast.LENGTH_SHORT).show();
@@ -117,6 +115,11 @@ public class RegisterActivity extends AppCompatActivity {
             check = true;
         } else if (password.length() < 6) {
             Toast.makeText(getApplicationContext(), "Minimum 6 characters in a password.", Toast.LENGTH_SHORT).show();
+            check = true;
+        }
+
+        if (!password.equals(passwordConf)) {
+            Toast.makeText(getApplicationContext(), R.string.password_match, Toast.LENGTH_SHORT).show();
             check = true;
         }
 
@@ -170,6 +173,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
     private void FirebaseGoogleAuth(GoogleSignInAccount account){
+        if (account == null) {
+            Toast.makeText(RegisterActivity.this, "FAILED", Toast.LENGTH_SHORT).show();
+
+        } else {
         AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -183,6 +190,7 @@ public class RegisterActivity extends AppCompatActivity {
                 switchActivity();
             }
         });
+        }
     }
 
     private void switchActivity() {

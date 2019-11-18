@@ -20,14 +20,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/username"
-            android:inputType="textPersonName" />
+            android:text="@string/app_name"
+            android:textSize="35dp"
+            android:layout_marginBottom="45dp"
+            android:fontFamily="Roboto-Black"
+            android:textColor="@color/corporate_orange"
+            />
 
         <EditText
             android:id="@+id/email"
@@ -37,7 +38,8 @@
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:backgroundTint="@color/corporate_orange"/>
 
         <EditText
             android:id="@+id/password"
@@ -45,24 +47,37 @@
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
             android:hint="@string/password"
-            android:imeActionId="@+id/login"
             android:imeOptions="actionUnspecified"
             android:inputType="textPassword"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:backgroundTint="@color/corporate_orange" />
 
+        <EditText
+            android:id="@+id/confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:hint="@string/confirm_password"
+            android:imeOptions="actionUnspecified"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:backgroundTint="@color/corporate_orange"/>
         <Button
             android:id="@+id/sign_up_button"
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/colorAccent"
+            android:background="@color/corporate_orange"
             android:onClick="onRegisterClicked"
             android:text="@string/action_sign_in_short"
             android:textColor="@android:color/black"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            />
 
         <!-- Link to Login Screen -->
 
@@ -71,19 +86,20 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
-            android:background="@null"
             android:onClick="onLoginClicked"
             android:text="@string/btn_link_to_login"
+            android:background="@color/corporate_orange_light"
             android:textAllCaps="false"
             android:textColor="@color/black"
             android:textSize="15dp" />
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/g_sign_in_button"
-
+            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onGoogleSignInClick"/>
+            android:layout_height="wrap_content" />
+
+
 
     </LinearLayout>
 
