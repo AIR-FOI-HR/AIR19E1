@@ -38,15 +38,20 @@ dependencies {
 
 
     //module dependencies
-    implementation project (path: ':database')
-    implementation project (path: ':webservice')
-    implementation project (path: ':core')
-    implementation project (path: ':maps')
+    implementation project(path: ':database')
+    implementation project(path: ':webservice')
+    implementation project(path: ':core')
+    implementation project(path: ':maps')
 
     // implement FIREBASE
     implementation 'com.google.firebase:firebase-firestore:21.3.0'
     implementation 'com.google.firebase:firebase-auth:19.1.0'
+    implementation 'com.google.android.material:material:1.0.0'
 
+
+    def coordinatorlayout_version = "1.0.0"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$coordinatorlayout_version"
+    implementation 'com.google.firebase:firebase-auth:19.1.0'
 
 }
 apply plugin: 'com.google.gms.google-services'

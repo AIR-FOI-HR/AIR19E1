@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class SignedActivity extends AppCompatActivity {
 
     private TextView nameofuser;
-
+    private ImageView userProfile;
 
     private final static int ALL_PERMISSIONS_RESULT = 101;
     LocationProvider lp;
@@ -45,13 +46,22 @@ public class SignedActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signed);
+        userProfile = findViewById(R.id.iconProfile);
+        userProfile.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                switchActivity();
+            }
+        });
         try {
             String uid = FirebaseAuth.getInstance().getCurrentUser().getEmail();
             nameofuser = (TextView) findViewById(R.id.user_name);
             nameofuser.setText(uid);
 
+        }
 
-        } catch (NullPointerException e) {
+
+         catch (NullPointerException e) {
             nameofuser = (TextView) findViewById(R.id.user_name);
             nameofuser.setText("null");
         }
@@ -72,6 +82,11 @@ public class SignedActivity extends AppCompatActivity {
 
     }
 
+    public void switchActivity() {
+        startActivity(new Intent(this, UserProfileActivity.class));
+        finish();
+
+    }
     @Override
     protected void onResume() {
         super.onResume();
