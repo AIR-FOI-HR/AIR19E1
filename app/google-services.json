@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "306677882820-crk3frv95ug410dsksuqomuni27si3vd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cbd.teammate",
+            "certificate_hash": "95a90ba5d9261fc8fdc099c781d6936b9e473668"
+          }
+        },
+        {
           "client_id": "306677882820-6bv5jf04h8v6ss9dn0mi4hqppunc9390.apps.googleusercontent.com",
           "client_type": 3
         }
