@@ -74,7 +74,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="25"
-                    android:src="@drawable/profile_icon"
+                    android:src="@drawable/profile_icon_black"
                     android:id="@+id/iconProfile"
                     android:clickable="true"/>
                 <androidx.appcompat.widget.AppCompatImageView
@@ -109,7 +109,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profPicture" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/profPicture"
             android:layout_width="185dp"
             android:layout_height="220dp"
@@ -118,7 +118,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.162"
-            app:srcCompat="@drawable/profile_icon" />
+            app:srcCompat="@drawable/profile_icon_black"
+            android:background="@drawable/square_border"/>
 
         <TextView
             android:id="@+id/telNumber"
