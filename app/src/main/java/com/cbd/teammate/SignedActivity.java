@@ -1,13 +1,16 @@
 package com.cbd.teammate;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cbd.maps.LocationProvider;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -16,6 +19,26 @@ import com.google.firebase.auth.UserInfo;
 
 public class SignedActivity extends AppCompatActivity {
     private TextView nameofuser;
+
+
+    private final static int ALL_PERMISSIONS_RESULT = 101;
+    LocationProvider lp;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case ALL_PERMISSIONS_RESULT:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this,
+                            "This app requires location permissions to be granted",
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+        }
+    }
 
 
 
@@ -39,6 +62,9 @@ public class SignedActivity extends AppCompatActivity {
             startActivity(new Intent(this, RegisterActivity.class));
             finish();
         }
+
+        lp = new LocationProvider();
+        lp.setup(this, this);
     }
 
     public void onLogout(View view) {
@@ -53,4 +79,19 @@ public class SignedActivity extends AppCompatActivity {
       //  FirebaseAuth.getInstance().signOut();
         //finish();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        lp.resumeLocationUpdates();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        lp.pauseLocationUpdates();
+    }
+
 }
