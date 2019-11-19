@@ -1,25 +1,29 @@
 package com.cbd.teammate;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import com.cbd.maps.LocationProvider;
+import com.cbd.teammate.fragments.NearbyFragment;
+import com.cbd.teammate.fragments.ProfileFragment;
+import com.cbd.teammate.fragments.SearchFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SignedActivity extends AppCompatActivity {
 
-    private TextView nameofuser;
-
-
     private final static int ALL_PERMISSIONS_RESULT = 101;
     LocationProvider lp;
+    private TextView nameofuser;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -38,38 +42,44 @@ public class SignedActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signed);
-        try {
-            String uid = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-            nameofuser = (TextView) findViewById(R.id.user_name);
-            nameofuser.setText(uid);
-
-
-        } catch (NullPointerException e) {
-            nameofuser = (TextView) findViewById(R.id.user_name);
-            nameofuser.setText("null");
-        }
 
         lp = new LocationProvider();
         lp.setup(this, this);
+
+        BottomNavigationView navbar = findViewById(R.id.bottom_navigation);
+        navbar.setSelectedItemId(R.id.nav_near);
+        createNavigationListener(navbar);
     }
 
-    public void onLogout(View view) {
+    private void createNavigationListener(BottomNavigationView navbar) {
+        navbar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                Fragment selected = null;
 
-        FirebaseAuth.getInstance().signOut();
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            Toast.makeText(getApplicationContext(), "still not null", Toast.LENGTH_SHORT);
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_near:
+                        selected = new NearbyFragment();
+                        break;
+                    case R.id.nav_profile:
+                        selected = new ProfileFragment();
+                        break;
+                    case R.id.nav_search:
+                        selected = new SearchFragment();
+                        break;
+                }
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_above_nav, selected).commit();
 
-        }
-        startActivity(new Intent(this, RegisterActivity.class));
-        finish();
-
+                return true;
+            }
+        });
     }
 
     @Override
