@@ -1,10 +1,8 @@
 package com.cbd.teammate;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +15,6 @@ import com.cbd.teammate.fragments.NearbyFragment;
 import com.cbd.teammate.fragments.ProfileFragment;
 import com.cbd.teammate.fragments.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class SignedActivity extends AppCompatActivity {
 
