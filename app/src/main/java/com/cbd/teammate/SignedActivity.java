@@ -50,8 +50,9 @@ public class SignedActivity extends AppCompatActivity {
         lp.setup(this, this);
 
         BottomNavigationView navbar = findViewById(R.id.bottom_navigation);
-        navbar.setSelectedItemId(R.id.nav_near);
         createNavigationListener(navbar);
+
+        navbar.setSelectedItemId(R.id.nav_near);
     }
 
     private void createNavigationListener(BottomNavigationView navbar) {

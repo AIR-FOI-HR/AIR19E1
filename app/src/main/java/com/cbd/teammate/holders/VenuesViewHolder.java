@@ -1,6 +1,7 @@
 package com.cbd.teammate.holders;
 
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -8,9 +9,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cbd.teammate.R;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class VenuesViewHolder extends RecyclerView.ViewHolder {
 
     View view;
+    CircleImageView image;
+    TextView venueName;
+    TextView venueLatitude;
+    TextView venueLongitude;
+    RelativeLayout parentLayout;
 
     public VenuesViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -18,13 +26,17 @@ public class VenuesViewHolder extends RecyclerView.ViewHolder {
         view = itemView;
     }
 
-    public void setDetails(String venueName, Double latitude, Double longitude) {
-        TextView textViewVenueName = view.findViewById(R.id.search_venue_name);
-        TextView textViewLatitude = view.findViewById(R.id.search_latitude_value);
-        TextView textViewLongitude = view.findViewById(R.id.search_longitude_value);
+    public void setDetails(String nameVenue, Double latitude, Double longitude) {
+        venueName = view.findViewById(R.id.search_venue_name);
+        venueLatitude = view.findViewById(R.id.search_latitude_value);
+        venueLongitude = view.findViewById(R.id.search_longitude_value);
+        CircleImageView imageView = view.findViewById(R.id.venueImage);
+        parentLayout= itemView.findViewById(R.id.parentLayout);
 
-        textViewVenueName.setText(venueName);
-        textViewLatitude.setText(latitude.toString());
-        textViewLongitude.setText(longitude.toString());
+        venueName.setText(nameVenue);
+        venueLatitude.setText(latitude.toString());
+        venueLongitude.setText(longitude.toString());
+
     }
 }
+

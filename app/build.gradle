@@ -49,13 +49,24 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.1.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.firebaseui:firebase-ui-firestore:6.1.0'
-
+    implementation 'com.firebaseui:firebase-ui-database:3.2.2'
     // menu navbar implementation
     implementation 'com.google.android.material:material:1.0.0'
-
+    //coordinatroLayout
     def coordinatorlayout_version = "1.0.0"
     implementation "androidx.coordinatorlayout:coordinatorlayout:$coordinatorlayout_version"
     implementation 'com.google.firebase:firebase-auth:19.1.0'
+    //circleImageview
     implementation 'de.hdodenhof:circleimageview:3.0.1'
+    def recyclerview_version = "1.0.0"
+    // For control over item selection of both touch and mouse driven selection
+    implementation "androidx.recyclerview:recyclerview-selection:$recyclerview_version"
+    //recycler
+
+
+    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 }
 apply plugin: 'com.google.gms.google-services'
