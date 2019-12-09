@@ -8,6 +8,8 @@ import java.util.List;
 @IgnoreExtraProperties
 public class Venue {
 
+    private String uid;
+
     private String name;
     private Double latitude;
     private Double longitude;

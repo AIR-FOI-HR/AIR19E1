@@ -7,6 +7,8 @@ import java.util.List;
 @IgnoreExtraProperties
 public class Activity {
 
+    private String uid;
+
     private String sport, date, description,
             playerType;
     private Double price;
