@@ -2,7 +2,6 @@ package com.cbd.database.entities;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
-import java.util.Collection;
 import java.util.List;
 
 @IgnoreExtraProperties
@@ -13,13 +12,14 @@ public class Venue {
     private String name;
     private Double latitude;
     private Double longitude;
-    private List<Activity> activities;
+    private List<String> activities;
 
     public Venue() {
 
     }
 
-    public Venue(String name, Double latitude, Double longitude, List<Activity> activities) {
+    public Venue(String uid, String name, Double latitude, Double longitude, List<String> activities) {
+        this.uid = uid;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -34,7 +34,7 @@ public class Venue {
         this.name = name;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
@@ -42,7 +42,7 @@ public class Venue {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
@@ -50,11 +50,11 @@ public class Venue {
         this.longitude = longitude;
     }
 
-    public Collection<Activity> getActivities() {
+    public List<String> getActivities() {
         return activities;
     }
 
-    public void setActivities(List<Activity> activities) {
+    public void setActivities(List<String> activities) {
         this.activities = activities;
     }
 }

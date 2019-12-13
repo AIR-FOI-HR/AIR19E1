@@ -13,22 +13,23 @@ public class Activity {
             playerType;
     private Double price;
     private Integer playersNeeded;
-    private Player creator;
-    private List<Player> players;
+    private String creatorid;
+    private List<String> players;
 
     public Activity() {
 
     }
 
-    public Activity(String sport, String date, String description, String playerType,
-                    Double price, Integer playersNeeded, Player creator, List<Player> players) {
+    public Activity(String uid, String sport, String date, String description, String playerType,
+                    Double price, Integer playersNeeded, String creatorid, List<String> players) {
+        this.uid = uid;
         this.sport = sport;
         this.date = date;
         this.description = description;
         this.playerType = playerType;
         this.price = price;
         this.playersNeeded = playersNeeded;
-        this.creator = creator;
+        this.creatorid = creatorid;
         this.players = players;
     }
 
@@ -80,19 +81,19 @@ public class Activity {
         this.playerType = playerType;
     }
 
-    public Player getCreator() {
-        return creator;
+    public String getCreatorId() {
+        return creatorid;
     }
 
-    public void setCreator(Player creator) {
-        this.creator = creator;
+    public void setCreatorId(String creatorid) {
+        this.creatorid = creatorid;
     }
 
-    public List<Player> getPlayers() {
+    public List<String> getPlayers() {
         return players;
     }
 
-    public void setPlayers(List<Player> players) {
+    public void setPlayers(List<String> players) {
         this.players = players;
     }
 }

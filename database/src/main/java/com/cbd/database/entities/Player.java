@@ -5,16 +5,25 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class Player {
 
-    private String name, photoLink, phone;
+    private String uid, name, photoLink, phone;
 
     public Player() {
 
     }
 
-    public Player(String name, String photoLink, String phone) {
+    public Player(String uid, String name, String photoLink, String phone) {
+        this.uid = uid;
         this.name = name;
         this.photoLink = photoLink;
         this.phone = phone;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getName() {

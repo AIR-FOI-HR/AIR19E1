@@ -16,6 +16,9 @@
     <color name="btn_logut_bg">#ff6861</color>
     <color name="corporate_orange">#C96B30</color>
     <color name="corporate_orange_light">#cc9776</color>
+    <color name="corporate_orange_light_transparent">#cccc9776</color>
+    <color name="green_material">#018786</color>
+    <color name="dark_grey">#424242</color>
     <color name="colorOrange">#C96B30</color>
     <color name="colorWhite">#fff</color>
     <color name="colorGray">#c3c3c3</color>

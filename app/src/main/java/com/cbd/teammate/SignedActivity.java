@@ -72,6 +72,7 @@ public class SignedActivity extends AppCompatActivity {
                         selected = new SearchFragment();
                         break;
                 }
+
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_above_nav, selected).commit();
 
@@ -93,5 +94,4 @@ public class SignedActivity extends AppCompatActivity {
 
         lp.pauseLocationUpdates();
     }
-
 }

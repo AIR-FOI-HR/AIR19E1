@@ -33,9 +33,8 @@
                     android:layout_height="match_parent"
                     android:text="TeamMate"
                     android:textAlignment="center"
-                    android:textSize="20sp"
                     android:textColor="@color/corporate_orange"
-                    />
+                    android:textSize="20sp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.Toolbar>

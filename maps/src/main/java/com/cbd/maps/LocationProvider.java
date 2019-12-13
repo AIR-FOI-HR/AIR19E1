@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
+import android.util.Log;
 import android.util.Pair;
 
 import androidx.core.app.ActivityCompat;
@@ -98,6 +99,7 @@ public class LocationProvider {
                         locationResult.getLocations()) {
                     if (location != null) {
                         latLng = new Pair<>(location.getLatitude(), location.getLongitude());
+                        Log.w("OLACI", latLng.toString());
                     }
                 }
             }
