@@ -31,6 +31,7 @@ Our team is following **Scrum** framework during the development process. As sai
 ## Product backlog
 ### Features
 The main features of the application will be as follows:
+
 | ID |                                    Item                                    |
 |:--:|:--------------------------------------------------------------------------:|
 | F1 | Browse sport venues near me.                                               |
