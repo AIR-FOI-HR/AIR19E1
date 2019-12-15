@@ -78,6 +78,11 @@ public class ActivityViewFragment extends Fragment {
         activityPlayerType.setText(activity.getPlayerType());
         activityPrice.setText(activity.getPrice().toString() + "kn");
 
+        if (activity.getPlayers().size() == activity.getPlayersNeeded()
+                && !signupButton.isEnabled()) {
+            signupButton.setEnabled(false);
+        }
+
         db.collection("players")
                 .whereEqualTo(FieldPath.documentId(), activity.getCreatorId()).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -94,30 +99,29 @@ public class ActivityViewFragment extends Fragment {
 
         String useruid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        if (activity.getPlayers().size() == activity.getPlayersNeeded()
-                || activity.getPlayers().contains(useruid)) {
-            signupButton.setEnabled(false);
-        } else {
-            signupButton.setEnabled(true);
-        }
+        db.collection("players")
+                .whereIn(FieldPath.documentId(), activity.getPlayers()).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<Player> players = queryDocumentSnapshots.toObjects(Player.class);
+                        List<String> playerNames = new ArrayList<>();
 
-        if (activity.getPlayers().contains(useruid)) {
-            db.collection("players")
-                    .whereIn(FieldPath.documentId(), activity.getPlayers()).get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            List<String> playerNames = new ArrayList<>();
-                            if (!queryDocumentSnapshots.isEmpty()) {
-                                for (Player p : queryDocumentSnapshots.toObjects(Player.class)) {
-                                    playerNames.add(p.getName());
-                                }
-                                playerList.setAdapter(new ArrayAdapter<>(view.getContext(),
-                                        android.R.layout.simple_list_item_1,
-                                        playerNames));
+                        for (Player p : players) {
+                            playerNames.add(p.getName());
+
+                            if (p.getUid().equals(useruid)) {
+                                signupButton.setEnabled(false);
                             }
                         }
-                    });
-        }
+
+                        if (playerNames.isEmpty())
+                            playerNames.add("No players yet!");
+
+                        playerList.setAdapter(new ArrayAdapter<>(view.getContext(),
+                                android.R.layout.simple_list_item_1,
+                                playerNames));
+                    }
+                });
     }
 }

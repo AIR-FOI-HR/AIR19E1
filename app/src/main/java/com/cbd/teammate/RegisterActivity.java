@@ -1,19 +1,19 @@
 package com.cbd.teammate;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.cbd.database.entities.Player;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -21,16 +21,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword, inputPasswordConf;
     private ProgressBar progressBar;
 
+    private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private SignInButton gSignButton;
     private GoogleSignInClient mGoogleSignInClient;
@@ -42,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        db = FirebaseFirestore.getInstance();
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
@@ -67,16 +73,16 @@ public class RegisterActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         gSignButton = findViewById(R.id.g_sign_in_button);
 
-        gSignButton.setOnClickListener(new View.OnClickListener(){
+        gSignButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public  void onClick(View view) {
+            public void onClick(View view) {
                 signIn();
 
             }
         });
     }
 
-    private void signIn(){
+    private void signIn() {
         mGoogleSignInClient.revokeAccess();
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -88,16 +94,16 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
     }
 
-    public void onLoginClicked(View view){
+    public void onLoginClicked(View view) {
         progressBar.setVisibility(View.VISIBLE);
         Toast.makeText(getApplicationContext(), "Use your already created account", Toast.LENGTH_LONG).show();
         progressBar.setVisibility(View.GONE);
-        startActivity(new Intent(this,LoginActivity.class));
+        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 
     // clicking on register button, checks if fields are not empty, minimum length of password
-    public void onRegisterClicked(View view){
+    public void onRegisterClicked(View view) {
         String emailInput = this.inputEmail.getText().toString().trim();
         String password = this.inputPassword.getText().toString().trim();
         String passwordConf = this.inputPasswordConf.getText().toString().trim();
@@ -138,10 +144,11 @@ public class RegisterActivity extends AppCompatActivity {
                             // failed sign in - message
                             // successful sign in - notify listener
 
-                            if(!task.isSuccessful()) {
+                            if (!task.isSuccessful()) {
                                 Toast.makeText(RegisterActivity.this, "Authentification failed " + task.getException(), Toast.LENGTH_LONG).show();
                                 Log.e("MyTag", task.getException().toString());
                             } else {
+                                createNewPlayerWithEmail();
                                 startActivity(new Intent(RegisterActivity.this, SignedActivity.class));
                                 finish();
                             }
@@ -172,24 +179,62 @@ public class RegisterActivity extends AppCompatActivity {
             FirebaseGoogleAuth(null);
         }
     }
-    private void FirebaseGoogleAuth(GoogleSignInAccount account){
+
+    private void FirebaseGoogleAuth(GoogleSignInAccount account) {
         if (account == null) {
             Toast.makeText(RegisterActivity.this, "FAILED", Toast.LENGTH_SHORT).show();
 
         } else {
-        AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        mAuth.signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(RegisterActivity.this, "Not a success", Toast.LENGTH_SHORT).show();
-
+            AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+            mAuth.signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        db.collection("players")
+                                .whereEqualTo("uid", FirebaseAuth.getInstance().getCurrentUser().getUid()).get()
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        if (queryDocumentSnapshots.isEmpty()) {
+                                            createNewPlayer();
+                                        }
+                                    }
+                                });
+                        Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Not a success", Toast.LENGTH_SHORT).show();
+                    }
+                    switchActivity();
                 }
-                switchActivity();
-            }
-        });
+            });
+        }
+    }
+
+    private void createNewPlayer() {
+        try {
+            FirebaseUser logged = FirebaseAuth.getInstance().getCurrentUser();
+            Player newPlayer = new Player(logged.getUid(),
+                    logged.getDisplayName(),
+                    logged.getPhotoUrl() != null ? logged.getPhotoUrl().toString() : null,
+                    logged.getPhoneNumber());
+
+            db.collection("players").add(newPlayer);
+        } catch (Throwable oops) {
+            Toast.makeText(RegisterActivity.this, "Oops! Something went wrong...", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void createNewPlayerWithEmail() {
+        try {
+            FirebaseUser logged = FirebaseAuth.getInstance().getCurrentUser();
+            Player newPlayer = new Player(logged.getUid(),
+                    logged.getEmail(),
+                    logged.getPhotoUrl() != null ? logged.getPhotoUrl().toString() : null,
+                    logged.getPhoneNumber());
+
+            db.collection("players").add(newPlayer);
+        } catch (Throwable oops) {
+            Toast.makeText(RegisterActivity.this, "Oops! Something went wrong...", Toast.LENGTH_SHORT).show();
         }
     }
 

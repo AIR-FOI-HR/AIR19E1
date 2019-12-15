@@ -22,20 +22,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profPicture"
+            app:layout_constraintTop_toBottomOf="@+id/profilePicture"
             app:layout_constraintVertical_bias="0.0" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/profPicture"
-            android:layout_width="185dp"
-            android:layout_height="220dp"
+            android:id="@+id/profilePicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxHeight="250sp"
+            android:maxWidth="200sp"
             android:background="@drawable/square_border"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.111"
-            app:srcCompat="@drawable/profile_icon_black" />
+            app:layout_constraintVertical_bias="0.111" />
 
         <TextView
             android:id="@+id/telNumber"
@@ -46,7 +47,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profPicture"
+            app:layout_constraintTop_toBottomOf="@+id/profilePicture"
             app:layout_constraintVertical_bias="0.227" />
 
         <Button
@@ -60,7 +61,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profPicture"
+            app:layout_constraintTop_toBottomOf="@+id/profilePicture"
             app:layout_constraintVertical_bias="0.805" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
