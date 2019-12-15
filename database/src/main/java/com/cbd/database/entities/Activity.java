@@ -7,8 +7,6 @@ import java.util.List;
 @IgnoreExtraProperties
 public class Activity {
 
-    private String uid;
-
     private String sport, date, description,
             playerType;
     private Double price;
@@ -20,9 +18,8 @@ public class Activity {
 
     }
 
-    public Activity(String uid, String sport, String date, String description, String playerType,
+    public Activity(String sport, String date, String description, String playerType,
                     Double price, Integer playersNeeded, String creatorid, List<String> players) {
-        this.uid = uid;
         this.sport = sport;
         this.date = date;
         this.description = description;

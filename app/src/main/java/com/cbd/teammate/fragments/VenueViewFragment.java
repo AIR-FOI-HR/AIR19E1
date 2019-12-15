@@ -85,7 +85,7 @@ public class VenueViewFragment extends Fragment {
 
     private void configureVenueRecyclerView(List<String> activities) {
 
-        if (activities != null) {
+        if (activities != null && !activities.isEmpty()) {
 
             Query query = db.collection("activities")
                     .whereIn(FieldPath.documentId(), activities);

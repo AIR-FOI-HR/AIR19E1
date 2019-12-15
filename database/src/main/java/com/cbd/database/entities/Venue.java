@@ -18,8 +18,7 @@ public class Venue {
 
     }
 
-    public Venue(String uid, String name, Double latitude, Double longitude, List<String> activities) {
-        this.uid = uid;
+    public Venue(String name, Double latitude, Double longitude, List<String> activities) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
