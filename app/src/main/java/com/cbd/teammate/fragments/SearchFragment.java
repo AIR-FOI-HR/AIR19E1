@@ -82,7 +82,7 @@ public class SearchFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull VenuesViewHolder holder, int position, @NonNull Venue model) {
                 try {
-                    holder.setDetails(model.getName(), model.getLatitude(), model.getLongitude());
+                    holder.setDetails(model.getName(), model.getLatitude(), model.getLongitude(), model.getPictureReference());
                 } catch (Throwable oops) {
                     Toast.makeText(view.getContext().getApplicationContext(), "Oops! Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
                 }

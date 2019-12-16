@@ -62,7 +62,7 @@ public class NearbyFragment extends Fragment {
             protected void onBindViewHolder(@NonNull VenuesViewHolder holder,
                                             int position, @NonNull Venue model) {
                 try {
-                    holder.setDetails(model.getName(), model.getLatitude(), model.getLongitude());
+                    holder.setDetails(model.getName(), model.getLatitude(), model.getLongitude(), model.getPictureReference());
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

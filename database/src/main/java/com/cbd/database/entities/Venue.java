@@ -4,7 +4,6 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.List;
 
-@IgnoreExtraProperties
 public class Venue {
 
     private String uid;
@@ -13,16 +12,18 @@ public class Venue {
     private Double latitude;
     private Double longitude;
     private List<String> activities;
+    private String pictureReference;
 
     public Venue() {
 
     }
 
-    public Venue(String name, Double latitude, Double longitude, List<String> activities) {
+    public Venue(String name, Double latitude, Double longitude, List<String> activities, String pictureReference) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.activities = activities;
+        this.pictureReference = pictureReference;
     }
 
     public String getName() {
@@ -55,5 +56,13 @@ public class Venue {
 
     public void setActivities(List<String> activities) {
         this.activities = activities;
+    }
+
+    public String getPictureReference(){
+        return this.pictureReference;
+    }
+
+    public void setPictureReference(String pictureReference) {
+        this.pictureReference = pictureReference;
     }
 }

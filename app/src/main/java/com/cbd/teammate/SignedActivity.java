@@ -49,6 +49,8 @@ public class SignedActivity extends AppCompatActivity {
         lp = new LocationProvider();
         lp.setup(this, this);
 
+
+
         BottomNavigationView navbar = findViewById(R.id.bottom_navigation);
         createNavigationListener(navbar);
 

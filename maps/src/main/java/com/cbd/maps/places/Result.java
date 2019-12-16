@@ -84,4 +84,5 @@ public class Result {
     public void setPlaceId(String placeId) {
         this.placeId = placeId;
     }
+
 }

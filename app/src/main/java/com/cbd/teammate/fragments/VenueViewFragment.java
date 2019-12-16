@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.squareup.picasso.Picasso;
 
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,6 +43,7 @@ public class VenueViewFragment extends Fragment {
     private Venue venue;
     private FirebaseFirestore db;
     private String testPhoto = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Fb0%2Ff6%2F33%2Fb0f633defac418a63ce25792bc881028.png&f=1&nofb=1";
+    private String newPicRef;
 
     public VenueViewFragment(Venue venue) {
         this.venue = venue;
@@ -68,19 +70,40 @@ public class VenueViewFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
     }
 
+    private void picReferenceCreate() {
+
+        try {
+            newPicRef = venue.getPictureReference();
+        } catch (Throwable ii) {
+            newPicRef = "CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU";
+        }
+
+    }
+
+    private String createPictureUrl() {
+        this.picReferenceCreate();
+        String finalUrl;
+        try {
+            finalUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + URLEncoder.encode(newPicRef, "UTF-8") + "&key=AIzaSyA5SObTwWEGnFkubedir0EkJu40WGwDAzo";
+        } catch (Throwable ee) {
+            finalUrl = "http://i.imgur.com/DvpvklR.png";
+        }
+        return finalUrl;
+    }
+
     private void setViewAttributes() {
         TextView name = view.findViewById(R.id.venue_view_name);
         TextView lat = view.findViewById(R.id.venue_view_latitude);
         TextView lon = view.findViewById(R.id.venue_view_longitude);
         ImageView image = view.findViewById(R.id.venue_view_image);
-
+        String url = this.createPictureUrl();
         configureVenueRecyclerView(venue.getActivities());
 
         name.setText(venue.getName());
         lat.setText(venue.getLatitude().toString());
         lon.setText(venue.getLongitude().toString());
         Picasso.get()
-                .load(testPhoto).into(image);
+                .load(url).into(image);
     }
 
     private void configureVenueRecyclerView(List<String> activities) {
@@ -106,7 +129,7 @@ public class VenueViewFragment extends Fragment {
                                                 .getSupportFragmentManager()
                                                 .beginTransaction();
                                         fragmentTransaction.replace(R.id.fragment_above_nav,
-                                                new ActivityViewFragment(model, venue.getName(), testPhoto));
+                                                new ActivityViewFragment(model, venue.getName(), newPicRef));
                                         fragmentTransaction.commit();
                                     }
                                 });

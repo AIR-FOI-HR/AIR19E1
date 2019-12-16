@@ -23,6 +23,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,13 +38,14 @@ public class ActivityViewFragment extends Fragment {
     private Activity activity;
     private View view;
     private String venueName;
-    private String photoVenue;
     private FirebaseFirestore db;
+    private String pictureReference;
 
-    public ActivityViewFragment(Activity activity, String venueName, String photoVenue) {
+    public ActivityViewFragment(Activity activity, String venueName, String pictureRefernece) {
         this.activity = activity;
         this.venueName = venueName;
-        this.photoVenue = photoVenue;
+        this.pictureReference = pictureRefernece;
+
     }
 
 
@@ -58,6 +61,15 @@ public class ActivityViewFragment extends Fragment {
         return view;
     }
 
+    private String createPictureUrl() {
+        String finalUrl;
+        try {
+            finalUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + URLEncoder.encode(this.pictureReference, "UTF-8") + "&key=AIzaSyA5SObTwWEGnFkubedir0EkJu40WGwDAzo";
+        } catch (Throwable ee) {
+            finalUrl = "http://i.imgur.com/DvpvklR.png";
+        }
+        return finalUrl;
+    }
     private void setData() {
         ImageView venueImage = view.findViewById(R.id.activity_view_image);
         TextView sportName = view.findViewById(R.id.activity_sport);
@@ -71,7 +83,7 @@ public class ActivityViewFragment extends Fragment {
         ListView playerList = view.findViewById(R.id.activity_list_players);
         Button signupButton = view.findViewById(R.id.activity_signup_button);
 
-        Picasso.get().load(photoVenue).into(venueImage);
+        Picasso.get().load(createPictureUrl()).into(venueImage);
         sportName.setText(activity.getSport());
         venueName.setText(this.venueName);
         activityDate.setText(activity.getDate());

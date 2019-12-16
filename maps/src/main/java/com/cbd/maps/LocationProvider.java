@@ -167,11 +167,20 @@ public class LocationProvider {
                                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                             @Override
                                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                String newPicRef;
+
+                                                try {
+                                                    newPicRef = r.getPhotos().iterator().next().getPhotoReference();
+                                                } catch (Throwable ii) {
+                                                    newPicRef = "CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU";
+                                                }
+
                                                 if (queryDocumentSnapshots.isEmpty()) {
                                                     Venue newVenue = new Venue(r.getFormattedAddress(),
                                                             r.getGeometry().getLocation().getLat(),
                                                             r.getGeometry().getLocation().getLng(),
-                                                            new ArrayList<String>());
+                                                            new ArrayList<String>(),
+                                                            newPicRef);
                                                     db.collection("venues").add(newVenue);
                                                 }
                                             }
