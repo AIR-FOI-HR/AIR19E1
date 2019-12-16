@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.cbd.teammate.R;
 import com.cbd.teammate.RegisterActivity;
+import com.cbd.teammate.SettingsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -27,6 +29,7 @@ public class ProfileFragment extends Fragment {
     private TextView textMail;
     private TextView textNumber;
     private ImageView profileImage;
+    private ImageButton settingsButton;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -42,6 +45,7 @@ public class ProfileFragment extends Fragment {
         textMail = view.findViewById(R.id.eMail);
         textNumber = view.findViewById(R.id.telNumber);
         profileImage = view.findViewById(R.id.profilePicture);
+        settingsButton = view.findViewById(R.id.settings_button);
 
         auth = FirebaseAuth.getInstance();
         FirebaseUser theUser = auth.getCurrentUser();
@@ -61,6 +65,13 @@ public class ProfileFragment extends Fragment {
 
         logout = view.findViewById(R.id.logout);
         addListener(logout);
+
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), SettingsActivity.class));
+            }
+        });
 
         return view;
     }

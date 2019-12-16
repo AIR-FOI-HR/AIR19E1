@@ -33,6 +33,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -146,7 +148,12 @@ public class LocationProvider {
     }
 
     private void requestToPlaces() {
-        String uri = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=sport+venue&location=46.3090637,16.3477807&rankby=distance&&key=AIzaSyA5SObTwWEGnFkubedir0EkJu40WGwDAzo";
+        String uri = null;
+        try {
+            uri = "https://maps.googleapis.com/maps/api/place/textsearch/json?type=stadium&location=46.308029%2C16.3377904&rankby=distance&"+ "&key=" + URLEncoder.encode(context.getResources().getString(R.string.api_key), "UTF-8");
+        } catch (Throwable ii ) {
+            ii.printStackTrace();
+        }
 
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -187,8 +194,9 @@ public class LocationProvider {
                                         });
                             }
                         } catch (Throwable oops) {
-                            Toast.makeText(context, "Oops! Something went wrong...", Toast.LENGTH_LONG).show();
                             Log.w("OLACI", oops.toString());
+
+                            Toast.makeText(context, "Oops! Something went wrong...", Toast.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {

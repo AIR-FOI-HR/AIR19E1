@@ -12,3 +12,6 @@
 /captures
 .externalNativeBuild
 .cxx
+/app/src/main/res/values/api_keys.xml
+/maps/src/main/res/values/api_keys.xml
+/app/google-services.json

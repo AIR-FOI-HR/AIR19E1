@@ -42,7 +42,7 @@ public class VenueViewFragment extends Fragment {
     private View view;
     private Venue venue;
     private FirebaseFirestore db;
-    private String testPhoto = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Fb0%2Ff6%2F33%2Fb0f633defac418a63ce25792bc881028.png&f=1&nofb=1";
+  //  private String testPhoto = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Fb0%2Ff6%2F33%2Fb0f633defac418a63ce25792bc881028.png&f=1&nofb=1";
     private String newPicRef;
 
     public VenueViewFragment(Venue venue) {
@@ -84,7 +84,7 @@ public class VenueViewFragment extends Fragment {
         this.picReferenceCreate();
         String finalUrl;
         try {
-            finalUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + URLEncoder.encode(newPicRef, "UTF-8") + "&key=AIzaSyA5SObTwWEGnFkubedir0EkJu40WGwDAzo";
+            finalUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + URLEncoder.encode(newPicRef, "UTF-8") + "&key=" + URLEncoder.encode(view.getResources().getString(R.string.api_key), "UTF-8");
         } catch (Throwable ee) {
             finalUrl = "http://i.imgur.com/DvpvklR.png";
         }

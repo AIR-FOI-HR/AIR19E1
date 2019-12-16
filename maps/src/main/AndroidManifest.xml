@@ -6,13 +6,6 @@ package="com.cbd.maps" >
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application>
-
-    <!--<service
-        android:name=".FetchAddressIntentService"
-        android:exported="false"/>-->
-   <!-- <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="@string/places_key" />-->
 </application>
 
 

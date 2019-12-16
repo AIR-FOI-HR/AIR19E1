@@ -14,14 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".SettingsActivity"></activity>
-        <activity android:name=".UserProfileActivity" />
         <activity android:name=".SignedActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/g_maps_api_key" />
+            android:value="@string/api_key" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

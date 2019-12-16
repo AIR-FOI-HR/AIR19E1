@@ -31,6 +31,8 @@
             android:layout_height="wrap_content"
             android:maxHeight="250sp"
             android:maxWidth="200sp"
+            android:minHeight="150sp"
+            android:minWidth="100sp"
             android:background="@drawable/square_border"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -50,9 +52,9 @@
             android:tint="@color/corporate_orange_light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.909"
+            app:layout_constraintHorizontal_bias="0.9"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profilePicture"
+            app:layout_constraintTop_toTopOf="@id/profilePicture"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView

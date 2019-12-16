@@ -35,7 +35,7 @@ public class VenuesViewHolder extends RecyclerView.ViewHolder {
 
         String finalUrl = "http://i.imgur.com/DvpvklR.png";
         try {
-           finalUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + URLEncoder.encode(pictureReference, "UTF-8") + "&key=AIzaSyA5SObTwWEGnFkubedir0EkJu40WGwDAzo";
+           finalUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + URLEncoder.encode(pictureReference, "UTF-8") + "&key=" + URLEncoder.encode(view.getResources().getString(R.string.api_key), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

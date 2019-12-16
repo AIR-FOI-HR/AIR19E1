@@ -23,7 +23,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,12 +63,13 @@ public class ActivityViewFragment extends Fragment {
     private String createPictureUrl() {
         String finalUrl;
         try {
-            finalUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + URLEncoder.encode(this.pictureReference, "UTF-8") + "&key=AIzaSyA5SObTwWEGnFkubedir0EkJu40WGwDAzo";
+            finalUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + URLEncoder.encode(this.pictureReference, "UTF-8") + "&key=" + URLEncoder.encode(view.getResources().getString(R.string.api_key), "UTF-8");
         } catch (Throwable ee) {
             finalUrl = "http://i.imgur.com/DvpvklR.png";
         }
         return finalUrl;
     }
+
     private void setData() {
         ImageView venueImage = view.findViewById(R.id.activity_view_image);
         TextView sportName = view.findViewById(R.id.activity_sport);
