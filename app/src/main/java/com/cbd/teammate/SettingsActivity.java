@@ -20,6 +20,7 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText phoneNumber;
     private Button saveSettings;
     private Button deleteAccount;
+    private Button discardButton;
     FirebaseFirestore db;
     FirebaseAuth firebaseAuth;
 
@@ -29,6 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         saveSettings = findViewById(R.id.save_settings_button);
         deleteAccount = findViewById(R.id.delete_account_button);
+        discardButton = findViewById(R.id.no_save_button);
 
         saveSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +43,14 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onDeleteClicked(v.getContext());
+            }
+        });
+
+        discardButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                onDiscardClicked();
             }
         });
     }
@@ -73,6 +83,13 @@ public class SettingsActivity extends AppCompatActivity {
         firebaseAuth.getInstance().getCurrentUser().delete();
 
         startActivity(new Intent(context, RegisterActivity.class));
+
+    }
+
+    public void onDiscardClicked() {
+        this.finish();
+
+      //  startActivity(new Intent(this, ProfileFragment.class));
 
     }
 }
