@@ -15,3 +15,12 @@
 /app/src/main/res/values/api_keys.xml
 /maps/src/main/res/values/api_keys.xml
 /app/google-services.json
+firebase.json
+package-lock.json
+.firebaserc
+node_modules
+/functions/node_modules/Users/Ondrej/AndroidStudioProjects/AIR19E1/functions/package-lock.json
+/functions/package.json
+/functions/tsconfig.json
+/functions/lib
+/functions/.gitignore
