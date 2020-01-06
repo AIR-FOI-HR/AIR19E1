@@ -3,7 +3,9 @@ package com.cbd.maps;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.util.Log;
 import android.util.Pair;
@@ -26,6 +28,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
@@ -33,9 +36,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -63,16 +67,28 @@ public class LocationProvider {
      */
 
     public Pair<Double, Double> getLatLng() {
-        return latLng;
+        return this.latLng;
+    }
+
+    public void setLatLng(Pair<Double, Double> latLng) {
+        this.latLng = latLng;
     }
 
     private void setContext(Context context) {
         this.context = context;
     }
 
-    /*
-     * Setup method to initialise API clients
-     */
+    public boolean isReady() {
+        boolean res = false;
+
+        if (latLng != null) {
+            if (!(latLng.first == 0. && latLng.second == 0.)) {
+                res = true;
+            }
+        }
+
+        return res;
+    }
 
     public void setup(Context context, Activity activity) {
         // Building and connecting
@@ -91,8 +107,8 @@ public class LocationProvider {
                 @Override
                 public void onSuccess(Location location) {
                     if (location != null) {
-                        latLng = new Pair<>(location.getLatitude(), location.getLongitude());
-                        requestToPlaces();
+                        setLatLng(new Pair<>(location.getLatitude(), location.getLongitude()));
+                        Log.w("LPDA", latLng.toString());
                     }
                 }
             });
@@ -106,6 +122,7 @@ public class LocationProvider {
 
         locationCallback();
 
+        requestToPlaces();
     }
 
     private void createLocationRequest() {
@@ -124,8 +141,8 @@ public class LocationProvider {
                 for (Location location :
                         locationResult.getLocations()) {
                     if (location != null) {
-                        latLng = new Pair<>(location.getLatitude(), location.getLongitude());
-                        Log.w("OLACI", latLng.toString());
+                        setLatLng(new Pair<>(location.getLatitude(), location.getLongitude()));
+                        Log.w("LPDA", latLng.toString());
                     }
                 }
             }
@@ -150,8 +167,8 @@ public class LocationProvider {
     private void requestToPlaces() {
         String uri = null;
         try {
-            uri = "https://maps.googleapis.com/maps/api/place/textsearch/json?type=stadium&location=46.308029%2C16.3377904&rankby=distance&"+ "&key=" + URLEncoder.encode(context.getResources().getString(R.string.api_key), "UTF-8");
-        } catch (Throwable ii ) {
+            uri = "https://maps.googleapis.com/maps/api/place/textsearch/json?type=stadium&location=46.308029%2C16.3377904&rankby=distance&key=" + URLEncoder.encode(context.getResources().getString(R.string.api_key), "UTF-8");
+        } catch (Throwable ii) {
             ii.printStackTrace();
         }
 
@@ -170,7 +187,7 @@ public class LocationProvider {
 
                             for (final Result r : placesResponse.getResults()) {
                                 db.collection("venues")
-                                        .whereEqualTo("name", r.getFormattedAddress()).get()
+                                        .whereEqualTo("uid", r.getPlaceId()).get()
                                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                             @Override
                                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -182,13 +199,23 @@ public class LocationProvider {
                                                     newPicRef = "CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU";
                                                 }
 
+                                                Log.w("OLACI", r.getPlaceId());
+
+                                                Venue newVenue = new Venue(r.getPlaceId(), r.getFormattedAddress(),
+                                                        r.getGeometry().getLocation().getLat(),
+                                                        r.getGeometry().getLocation().getLng(),
+                                                        new ArrayList<String>(),
+                                                        newPicRef);
+
                                                 if (queryDocumentSnapshots.isEmpty()) {
-                                                    Venue newVenue = new Venue(r.getFormattedAddress(),
-                                                            r.getGeometry().getLocation().getLat(),
-                                                            r.getGeometry().getLocation().getLng(),
-                                                            new ArrayList<String>(),
-                                                            newPicRef);
                                                     db.collection("venues").add(newVenue);
+                                                } else {
+                                                    DocumentReference docRef = db.collection("venues")
+                                                            .document(queryDocumentSnapshots.iterator().next().getId());
+
+                                                    updateVenueData(r, docRef);
+
+                                                    docRef.get();
                                                 }
                                             }
                                         });
@@ -209,4 +236,17 @@ public class LocationProvider {
         queue.add(request);
     }
 
+    private void updateVenueData(Result result, DocumentReference docRef) {
+        Map<String, Object> res = new HashMap<>();
+
+        docRef.update("name", result.getFormattedAddress());
+        docRef.update("latitude", result.getGeometry().getLocation().getLat());
+        docRef.update("longitude", result.getGeometry().getLocation().getLng());
+
+        if (result.getPhotos() != null) {
+            if (!result.getPhotos().isEmpty())
+                docRef.update("pictureReference", result.getPhotos().iterator().next().getPhotoReference());
+        }
+
+    }
 }

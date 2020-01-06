@@ -2,6 +2,7 @@ package com.cbd.teammate.fragments;
 
 
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cbd.database.entities.Venue;
+import com.cbd.maps.LocationProvider;
 import com.cbd.teammate.R;
 import com.cbd.teammate.holders.VenuesViewHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -29,11 +31,15 @@ public class NearbyFragment extends Fragment {
     private View venuesView;
     private RecyclerView myVenuesView;
     private FirestoreRecyclerAdapter<Venue, VenuesViewHolder> firestoreRecyclerAdapter;
+    private LocationProvider lp;
 
     public NearbyFragment() {
-        // Required empty public constructor
+
     }
 
+    public NearbyFragment(LocationProvider lp) {
+        this.lp = lp;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +68,7 @@ public class NearbyFragment extends Fragment {
             protected void onBindViewHolder(@NonNull VenuesViewHolder holder,
                                             int position, @NonNull Venue model) {
                 try {
-                    holder.setDetails(model.getName(), model.getLatitude(), model.getLongitude(), model.getPictureReference());
+                    holder.setDetails(model.getName(), model.getLatitude(), model.getLongitude(), model.getPictureReference(), lp.getLatLng());
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

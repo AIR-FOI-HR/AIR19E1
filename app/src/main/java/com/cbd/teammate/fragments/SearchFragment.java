@@ -2,6 +2,7 @@ package com.cbd.teammate.fragments;
 
 
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cbd.database.entities.Venue;
+import com.cbd.maps.LocationProvider;
+import com.cbd.maps.places.Location;
 import com.cbd.teammate.R;
 import com.cbd.teammate.holders.VenuesViewHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -31,11 +34,16 @@ public class SearchFragment extends Fragment {
 
     private EditText toSearch;
     private RecyclerView recyclerList;
+    private LocationProvider lp;
 
     private View view;
 
     public SearchFragment() {
         // Required empty public constructor
+    }
+
+    public SearchFragment(LocationProvider lp) {
+        this.lp = lp;
     }
 
     @Override
@@ -82,7 +90,7 @@ public class SearchFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull VenuesViewHolder holder, int position, @NonNull Venue model) {
                 try {
-                    holder.setDetails(model.getName(), model.getLatitude(), model.getLongitude(), model.getPictureReference());
+                    holder.setDetails(model.getName(), model.getLatitude(), model.getLongitude(), model.getPictureReference(), lp.getLatLng());
                 } catch (Throwable oops) {
                     Toast.makeText(view.getContext().getApplicationContext(), "Oops! Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
                 }

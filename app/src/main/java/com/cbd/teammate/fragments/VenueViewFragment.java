@@ -42,7 +42,6 @@ public class VenueViewFragment extends Fragment {
     private View view;
     private Venue venue;
     private FirebaseFirestore db;
-  //  private String testPhoto = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Fb0%2Ff6%2F33%2Fb0f633defac418a63ce25792bc881028.png&f=1&nofb=1";
     private String newPicRef;
 
     public VenueViewFragment(Venue venue) {

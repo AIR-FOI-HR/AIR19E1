@@ -2,6 +2,7 @@ package com.cbd.teammate;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class SignedActivity extends AppCompatActivity {
 
     private final static int ALL_PERMISSIONS_RESULT = 101;
-    LocationProvider lp;
+    public LocationProvider lp;
     private TextView nameofuser;
 
     @Override
@@ -49,7 +50,12 @@ public class SignedActivity extends AppCompatActivity {
         lp = new LocationProvider();
         lp.setup(this, this);
 
-
+//        while (true){
+//            Log.w("LPDA", lp.getLatLng().toString());
+//            if (lp.isReady()){
+//                break;
+//            }
+//        }
 
         BottomNavigationView navbar = findViewById(R.id.bottom_navigation);
         createNavigationListener(navbar);
@@ -65,13 +71,13 @@ public class SignedActivity extends AppCompatActivity {
 
                 switch (menuItem.getItemId()) {
                     case R.id.nav_near:
-                        selected = new NearbyFragment();
+                        selected = new NearbyFragment(lp);
                         break;
                     case R.id.nav_profile:
                         selected = new ProfileFragment();
                         break;
                     case R.id.nav_search:
-                        selected = new SearchFragment();
+                        selected = new SearchFragment(lp);
                         break;
                 }
 

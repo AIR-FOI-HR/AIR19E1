@@ -18,6 +18,15 @@ public class Venue {
 
     }
 
+    public Venue(String uid, String name, Double latitude, Double longitude, List<String> activities, String pictureReference) {
+        this.uid = uid;
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.activities = activities;
+        this.pictureReference = pictureReference;
+    }
+
     public Venue(String name, Double latitude, Double longitude, List<String> activities, String pictureReference) {
         this.name = name;
         this.latitude = latitude;
@@ -64,5 +73,13 @@ public class Venue {
 
     public void setPictureReference(String pictureReference) {
         this.pictureReference = pictureReference;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }
