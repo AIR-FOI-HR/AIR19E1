@@ -69,5 +69,8 @@ dependencies {
 
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Algolia Search
+    implementation 'com.algolia:algoliasearch-android:3.+'
 }
 apply plugin: 'com.google.gms.google-services'
