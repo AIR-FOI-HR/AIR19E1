@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -48,7 +49,10 @@ public class VenuesViewHolder extends RecyclerView.ViewHolder {
         parentLayout = itemView.findViewById(R.id.parentLayout);
 
         venueName.setText(nameVenue);
-        venueDistance.setText(distance.toString().subSequence(0, 7) + " km");
+
+        DecimalFormat decimalFormat = new DecimalFormat();
+        decimalFormat.setMaximumFractionDigits(2);
+        venueDistance.setText(decimalFormat.format(distance) + " km");
     }
 
     private Double calculateDistance(Double lat1, Double lat2, Double lon1, Double lon2) {
