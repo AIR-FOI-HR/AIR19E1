@@ -1,1 +1,2 @@
-<manifest package="com.cbd.core" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cbd.core" />

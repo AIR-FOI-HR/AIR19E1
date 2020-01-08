@@ -40,7 +40,6 @@ dependencies {
 
     //module dependencies
     implementation project(path: ':database')
-    implementation project(path: ':webservice')
     implementation project(path: ':core')
     implementation project(path: ':maps')
 
