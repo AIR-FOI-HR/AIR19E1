@@ -20,9 +20,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class VenuesViewHolder extends RecyclerView.ViewHolder {
 
     private View view;
-    private TextView venueName;
-    private TextView venueDistance;
-    private RelativeLayout parentLayout;
 
     public VenuesViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -38,15 +35,13 @@ public class VenuesViewHolder extends RecyclerView.ViewHolder {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        venueName = view.findViewById(R.id.search_venue_name);
+        TextView venueName = view.findViewById(R.id.search_venue_name);
 
         Double distance = calculateDistance(latitude, latLong.first, longitude, latLong.second);
 
-        venueDistance = view.findViewById(R.id.search_distance_value);
+        TextView venueDistance = view.findViewById(R.id.search_distance_value);
         CircleImageView imageView = view.findViewById(R.id.venueImage);
         Picasso.get().load(finalUrl).into(imageView);
-
-        parentLayout = itemView.findViewById(R.id.parentLayout);
 
         venueName.setText(nameVenue);
 
@@ -58,14 +53,14 @@ public class VenuesViewHolder extends RecyclerView.ViewHolder {
     private Double calculateDistance(Double lat1, Double lat2, Double lon1, Double lon2) {
         Double res;
 
-        Double dLon = deg2rad(lon2 - lon1);
-        Double dLat = deg2rad(lat2 - lat1);
+        double dLon = deg2rad(lon2 - lon1);
+        double dLat = deg2rad(lat2 - lat1);
 
-        Double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
                         Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
-        Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         res = 6370 * c;
 

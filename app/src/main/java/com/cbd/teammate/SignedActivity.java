@@ -50,13 +50,6 @@ public class SignedActivity extends AppCompatActivity {
         lp = new LocationProvider();
         lp.setup(this, this);
 
-//        while (true){
-//            Log.w("LPDA", lp.getLatLng().toString());
-//            if (lp.isReady()){
-//                break;
-//            }
-//        }
-
         BottomNavigationView navbar = findViewById(R.id.bottom_navigation);
         createNavigationListener(navbar);
 

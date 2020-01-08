@@ -9,20 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
-import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
+import com.cbd.core.VenueUtil;
 import com.cbd.database.entities.Venue;
 import com.cbd.maps.LocationProvider;
 import com.cbd.teammate.R;
@@ -37,23 +35,20 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements VenueUtil {
 
+    private List<String> list;
     private FirestoreRecyclerAdapter<Venue, VenuesViewHolder> firestoreRecyclerAdapter;
-
     private EditText toSearch;
     private RecyclerView recyclerList;
     private LocationProvider lp;
     private View view;
-
-    public SearchFragment() {
-        // Required empty public constructor
-    }
 
     public SearchFragment(LocationProvider lp) {
         this.lp = lp;
@@ -95,62 +90,38 @@ public class SearchFragment extends Fragment {
                 Query query = new Query(ed.toString())
                         .setAttributesToRetrieve("name")
                         .setHitsPerPage(50);
-                index.searchAsync(query, new CompletionHandler() {
-                    @Override
-                    public void requestCompleted(@Nullable JSONObject jsonObject, @Nullable AlgoliaException e) {
-                        Log.d("JSOBJECT", jsonObject.toString());
-                        try {
-                            JSONArray hits = jsonObject.getJSONArray("hits");
-                            List<String> list = new ArrayList<>();
+                index.searchAsync(query, (jsonObject, e) -> {
+                    assert jsonObject != null;
+                    Log.d("JSOBJECT", jsonObject.toString());
+                    try {
+                        JSONArray hits = jsonObject.getJSONArray("hits");
+                        list = new ArrayList<>();
 
-                            Log.w("testik", "hodnota = " + hits.length() );
+                        Log.w("testik", "hodnota = " + hits.length());
 
-                            for (int i = 0; i < hits.length(); i++){
-                                JSONObject object1 = hits.getJSONObject(i);
-                                String name = object1.getString("name");
-                                list.add(name);
-                            }
-                            // currently displays only first 10 results due to Firebase limitation
-                            if (hits.length() != 0 && hits.length() <= 10) {
-                            FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-                            com.google.firebase.firestore.Query query;
-                            query = rootRef
-                                    .collection("venues")
-                                    .whereIn("name", list)
-                                    .orderBy("name", com.google.firebase.firestore.Query.Direction.ASCENDING);
-
-                            FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
-                                    .setQuery(query, Venue.class)
-                                    .build();
-
-                            firestoreRecyclerAdapter
-                                    = new FirestoreRecyclerAdapter<Venue, VenuesViewHolder>(options) {
-                                @Override
-                                protected void onBindViewHolder(@NonNull VenuesViewHolder holder, int position, @NonNull Venue model) {
-                                    try {
-                                        holder.setDetails(model.getName(), model.getLatitude(), model.getLongitude(), model.getPictureReference(), lp.getLatLng());
-                                    } catch (Throwable oops) {
-                                        Toast.makeText(view.getContext().getApplicationContext(), "Oops! Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-
-                                @NonNull
-                                @Override
-                                public VenuesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                                    View view = LayoutInflater
-                                            .from(parent.getContext())
-                                            .inflate(R.layout.list_layout, parent, false);
-                                    return new VenuesViewHolder(view);
-                                }
-                            };
-                            firestoreRecyclerAdapter.startListening();
-                            recyclerList.setAdapter(firestoreRecyclerAdapter);
-                            }
-
-
-                        } catch (JSONException ex) {
-                            ex.printStackTrace();
+                        for (int i = 0; i < hits.length(); i++) {
+                            JSONObject object1 = hits.getJSONObject(i);
+                            String name = object1.getString("name");
+                            list.add(name);
                         }
+                        // currently displays only first 10 results due to Firebase limitation
+                        if (hits.length() != 0 && hits.length() <= 10) {
+                            com.google.firebase.firestore.Query query1 = createQuery();
+
+                            FirestoreRecyclerOptions<Venue> options = setOptions(query1);
+
+                            setFirestoreRecyclerAdapter(options);
+
+                            if (firestoreRecyclerAdapter != null) {
+                                firestoreRecyclerAdapter.startListening();
+                                recyclerList.setAdapter(firestoreRecyclerAdapter);
+                            }
+
+                        }
+
+
+                    } catch (JSONException ex) {
+                        ex.printStackTrace();
                     }
                 });
 
@@ -159,33 +130,25 @@ public class SearchFragment extends Fragment {
 
     }
 
-    private void createOnClickListener(ImageButton button) {
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!toSearch.getText().toString().trim().isEmpty()) {
-                    //firebaseVenueSearch(toSearch.getText().toString());
-                }
-            }
+    @Override
+    public void onClickListener(View view, Venue model) {
+        view.setOnClickListener(view1 -> {
+            FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
+                    .getSupportFragmentManager()
+                    .beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_above_nav, new VenueViewFragment(model));
+            fragmentTransaction.commit();
         });
     }
 
-  /*  private void firebaseVenueSearch(String input) {
-        Query query = FirebaseFirestore.getInstance()
-                .collection("venues")
-                .whereEqualTo("name", input)
-                .limit(20);
-
-        FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
-                .setQuery(query, Venue.class)
-                .build();
-
-        firestoreRecyclerAdapter
-                = new FirestoreRecyclerAdapter<Venue, VenuesViewHolder>(options) {
+    @Override
+    public void setFirestoreRecyclerAdapter(FirestoreRecyclerOptions<Venue> options) {
+        firestoreRecyclerAdapter = new FirestoreRecyclerAdapter<Venue, VenuesViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull VenuesViewHolder holder, int position, @NonNull Venue model) {
                 try {
                     holder.setDetails(model.getName(), model.getLatitude(), model.getLongitude(), model.getPictureReference(), lp.getLatLng());
+                    onClickListener(holder.itemView, model);
                 } catch (Throwable oops) {
                     Toast.makeText(view.getContext().getApplicationContext(), "Oops! Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
                 }
@@ -200,9 +163,21 @@ public class SearchFragment extends Fragment {
                 return new VenuesViewHolder(view);
             }
         };
-        firestoreRecyclerAdapter.startListening();
-        recyclerList.setAdapter(firestoreRecyclerAdapter);
     }
-*/
+
+    @Override
+    public com.google.firebase.firestore.Query createQuery() {
+        return FirebaseFirestore.getInstance()
+                .collection("venues")
+                .whereIn("name", list)
+                .orderBy("name", com.google.firebase.firestore.Query.Direction.ASCENDING);
+    }
+
+    @Override
+    public FirestoreRecyclerOptions<Venue> setOptions(com.google.firebase.firestore.Query query) {
+        return new FirestoreRecyclerOptions.Builder<Venue>()
+                .setQuery(query, Venue.class)
+                .build();
+    }
 }
 
