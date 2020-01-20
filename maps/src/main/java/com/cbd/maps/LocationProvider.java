@@ -3,9 +3,7 @@ package com.cbd.maps;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.util.Log;
 import android.util.Pair;
@@ -210,12 +208,18 @@ public class LocationProvider {
                                                 if (queryDocumentSnapshots.isEmpty()) {
                                                     db.collection("venues").add(newVenue);
                                                 } else {
-                                                    DocumentReference docRef = db.collection("venues")
-                                                            .document(queryDocumentSnapshots.iterator().next().getId());
+                                                    // always updating
+                                                    Venue dbVenue = queryDocumentSnapshots.iterator().next().toObject(Venue.class);
 
-                                                    updateVenueData(r, docRef);
+                                                    if (!dbVenue.equals(newVenue)) {
+                                                            DocumentReference docRef = db.collection("venues")
+                                                                    .document(queryDocumentSnapshots.iterator().next().getId());
 
-                                                    docRef.get();
+                                                            updateVenueData(r, docRef);
+
+                                                            docRef.get();
+
+                                                    }
                                                 }
                                             }
                                         });

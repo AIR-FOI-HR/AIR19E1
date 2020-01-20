@@ -1,8 +1,7 @@
 package com.cbd.database.entities;
 
-import com.google.firebase.firestore.IgnoreExtraProperties;
-
 import java.util.List;
+import java.util.Objects;
 
 public class Venue {
 
@@ -67,7 +66,7 @@ public class Venue {
         this.activities = activities;
     }
 
-    public String getPictureReference(){
+    public String getPictureReference() {
         return this.pictureReference;
     }
 
@@ -81,5 +80,16 @@ public class Venue {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Venue venue = (Venue) o;
+        return Objects.equals(uid, venue.uid) &&
+                Objects.equals(name, venue.name) &&
+                Objects.equals(latitude, venue.latitude) &&
+                Objects.equals(longitude, venue.longitude);
     }
 }
