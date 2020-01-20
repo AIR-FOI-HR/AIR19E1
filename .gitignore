@@ -25,3 +25,5 @@ node_modules
 /functions/lib
 /functions/.gitignore
 .idea/inspectionProfiles/Project_Default.xml
+
+.idea/dictionaries/pablo.xml

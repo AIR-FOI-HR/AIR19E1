@@ -2,7 +2,6 @@ package com.cbd.teammate;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.cbd.maps.LocationProvider;
+import com.cbd.teammate.fragments.MyActivitiesFragment;
 import com.cbd.teammate.fragments.NearbyFragment;
 import com.cbd.teammate.fragments.ProfileFragment;
 import com.cbd.teammate.fragments.SearchFragment;
@@ -71,6 +71,9 @@ public class SignedActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_search:
                         selected = new SearchFragment(lp);
+                        break;
+                    case R.id.nav_mine:
+                        selected = new MyActivitiesFragment(getSupportFragmentManager());
                         break;
                 }
 

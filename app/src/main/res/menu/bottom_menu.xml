@@ -7,6 +7,11 @@
         android:title="Nearby" />
 
     <item
+        android:id="@+id/nav_mine"
+        android:icon="@drawable/baseline_sports_basketball_24"
+        android:title="My Activities" />
+
+    <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_person_black_24dp"
         android:title="Profile" />
