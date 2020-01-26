@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.cbd.database.entities.Activity;
 import com.cbd.database.entities.Player;
@@ -26,6 +27,7 @@ import com.squareup.picasso.Picasso;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -82,6 +84,22 @@ public class ActivityViewFragment extends Fragment {
         TextView creatorPhone = view.findViewById(R.id.creator_phone);
         ListView playerList = view.findViewById(R.id.activity_list_players);
         Button signupButton = view.findViewById(R.id.activity_signup_button);
+
+        signupButton.setOnClickListener(v -> {
+            String userId = FirebaseAuth.getInstance().getUid();
+            db.collection("players").whereEqualTo("uid", userId).get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            Player player = queryDocumentSnapshots.iterator().next().toObject(Player.class);
+
+                            FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
+                                    .getSupportFragmentManager()
+                                    .beginTransaction();
+                            fragmentTransaction.replace(R.id.fragment_above_nav, new RequestFragment(activity, player));
+                            fragmentTransaction.commit();
+                        }
+                    });
+        });
 
         Picasso.get().load(createPictureUrl()).into(venueImage);
         sportName.setText(activity.getSport());
