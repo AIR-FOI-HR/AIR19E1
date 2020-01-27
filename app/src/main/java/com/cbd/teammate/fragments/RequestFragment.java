@@ -13,14 +13,18 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.cbd.database.entities.Activity;
 import com.cbd.database.entities.Player;
 import com.cbd.database.entities.Request;
+import com.cbd.maps.LocationProvider;
 import com.cbd.teammate.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Objects;
 
 public class RequestFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private EditText desc;
@@ -32,11 +36,13 @@ public class RequestFragment extends Fragment implements AdapterView.OnItemSelec
     private String uId;
     private Player player;
     private boolean alreadyApplied;
+    private LocationProvider LP;
 
-    public RequestFragment(Activity activity, Player player) {
+    public RequestFragment(Activity activity, Player player,LocationProvider lp) {
         this.activity = activity;
         this.uId = activity.getCreatorId();
         this.player = player;
+        this.LP = lp;
     }
 
     @Override
@@ -80,35 +86,50 @@ public class RequestFragment extends Fragment implements AdapterView.OnItemSelec
         });
     }
 
-    public com.google.firebase.firestore.Query createQuery() {
+    private com.google.firebase.firestore.Query createQuery() {
         return FirebaseFirestore.getInstance()
                 .collection("requests")
-                .whereEqualTo("activity", this.activity)
-                .whereEqualTo("player", this.player);
+                .whereEqualTo("activity", activity)
+                .whereEqualTo("player", player)
+                ;
     }
 
     private void DuplicateCheck() {
         com.google.firebase.firestore.Query query1 = createQuery();
-        query1.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        query1.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>(){
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    alreadyApplied = true;
+                if (queryDocumentSnapshots.isEmpty()) {
+                    descText = desc.getText().toString();
+                    level = spinnerLevel.getSelectedItem().toString();
+                    Request request = new Request(uId, level, descText, Boolean.FALSE, activity, player);
+                    FirebaseFirestore.getInstance().collection("requests")
+                            .add(request);
+
+
+                    FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
+                            .getSupportFragmentManager()
+                            .beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment_above_nav, new NearbyFragment(LP));
+                    fragmentTransaction.commit();
+                }
+                else {
+                    Toast.makeText(getContext(), "You are already registered!", Toast.LENGTH_SHORT).show();
+                    FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
+                            .getSupportFragmentManager()
+                            .beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment_above_nav, new NearbyFragment(LP));
+                    fragmentTransaction.commit();
+
                 }
             }
         });
     }
 
     private void addRequest() {
-        if (desc.getText().toString().length() > 20) {
+        if (desc.getText().toString().length() > 10 && desc.getText().toString().length() < 80) {
             DuplicateCheck();
-            if (!alreadyApplied) {
-                this.descText = desc.getText().toString();
-                this.level = spinnerLevel.getSelectedItem().toString();
-                Request request = new Request(uId, level, descText, Boolean.FALSE, activity, player);
-                        FirebaseFirestore.getInstance().collection("requests")
-                        .add(request);
-            }
+
         } else {
             Toast.makeText(getContext(), "Enter description minimum 20 letters long", Toast.LENGTH_SHORT).show();
 

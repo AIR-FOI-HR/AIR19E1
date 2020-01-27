@@ -67,7 +67,7 @@ public class SignedActivity extends AppCompatActivity {
                         selected = new NearbyFragment(lp);
                         break;
                     case R.id.nav_profile:
-                        selected = new ProfileFragment();
+                        selected = new ProfileFragment(lp);
                         break;
                     case R.id.nav_search:
                         selected = new SearchFragment(lp);

@@ -136,7 +136,7 @@ public class SearchFragment extends Fragment implements VenueUtil {
             FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
                     .getSupportFragmentManager()
                     .beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_above_nav, new VenueViewFragment(model));
+            fragmentTransaction.replace(R.id.fragment_above_nav, new VenueViewFragment(model,lp));
             fragmentTransaction.commit();
         });
     }

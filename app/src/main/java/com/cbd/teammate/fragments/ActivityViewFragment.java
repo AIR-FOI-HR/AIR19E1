@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.cbd.database.entities.Activity;
 import com.cbd.database.entities.Player;
+import com.cbd.maps.LocationProvider;
 import com.cbd.teammate.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,12 +42,13 @@ public class ActivityViewFragment extends Fragment {
     private String venueName;
     private FirebaseFirestore db;
     private String pictureReference;
+    private LocationProvider lp;
 
-    public ActivityViewFragment(Activity activity, String venueName, String pictureRefernece) {
+    public ActivityViewFragment(Activity activity, String venueName, String pictureRefernece, LocationProvider lp) {
         this.activity = activity;
         this.venueName = venueName;
         this.pictureReference = pictureRefernece;
-
+        this.lp = lp;
     }
 
 
@@ -95,7 +97,7 @@ public class ActivityViewFragment extends Fragment {
                             FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
                                     .getSupportFragmentManager()
                                     .beginTransaction();
-                            fragmentTransaction.replace(R.id.fragment_above_nav, new RequestFragment(activity, player));
+                            fragmentTransaction.replace(R.id.fragment_above_nav, new RequestFragment(activity, player,lp));
                             fragmentTransaction.commit();
                         }
                     });

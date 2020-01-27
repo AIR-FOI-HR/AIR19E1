@@ -14,9 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:windowSoftInputMode="adjustPan">
         <activity android:name=".SettingsActivity"/>
-        <activity android:name=".SignedActivity" />
+        <activity android:name=".SignedActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
 

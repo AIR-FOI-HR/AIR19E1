@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cbd.database.entities.Activity;
 import com.cbd.database.entities.Venue;
+import com.cbd.maps.LocationProvider;
 import com.cbd.teammate.R;
 import com.cbd.teammate.holders.ActivityHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -43,9 +44,11 @@ public class VenueViewFragment extends Fragment {
     private Venue venue;
     private FirebaseFirestore db;
     private String newPicRef;
+    private LocationProvider lp;
 
-    public VenueViewFragment(Venue venue) {
+    public VenueViewFragment(Venue venue, LocationProvider lp) {
         this.venue = venue;
+        this.lp = lp;
     }
 
     @Override
@@ -128,7 +131,7 @@ public class VenueViewFragment extends Fragment {
                                                 .getSupportFragmentManager()
                                                 .beginTransaction();
                                         fragmentTransaction.replace(R.id.fragment_above_nav,
-                                                new ActivityViewFragment(model, venue.getName(), newPicRef));
+                                                new ActivityViewFragment(model, venue.getName(), newPicRef,lp));
                                         fragmentTransaction.commit();
                                     }
                                 });
