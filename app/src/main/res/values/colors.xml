@@ -22,4 +22,5 @@
     <color name="colorOrange">#C96B30</color>
     <color name="colorWhite">#fff</color>
     <color name="colorGray">#c3c3c3</color>
-</resources>
+    <color name="whiteTransparent">#ABFFFFFF</color>
+    </resources>
