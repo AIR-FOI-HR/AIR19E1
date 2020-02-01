@@ -97,7 +97,7 @@ public class ActivityViewFragment extends Fragment {
                             FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
                                     .getSupportFragmentManager()
                                     .beginTransaction();
-                            fragmentTransaction.replace(R.id.fragment_above_nav, new RequestFragment(activity, player,lp));
+                            fragmentTransaction.replace(R.id.fragment_above_nav, new RequestFragment(activity, player, lp));
                             fragmentTransaction.commit();
                         }
                     });
@@ -115,8 +115,10 @@ public class ActivityViewFragment extends Fragment {
             signupButton.setEnabled(false);
         }
 
+        String useruid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         db.collection("players")
-                .whereEqualTo(FieldPath.documentId(), activity.getCreatorId()).get()
+                .whereEqualTo("uid", activity.getCreatorId()).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -125,35 +127,38 @@ public class ActivityViewFragment extends Fragment {
                             Picasso.get().load(p.get(0).getPhotoLink()).into(creatorImage);
                             creatorName.setText(p.get(0).getName());
                             creatorPhone.setText(p.get(0).getPhone());
-                        }
-                    }
-                });
 
-        String useruid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        db.collection("players")
-                .whereIn(FieldPath.documentId(), activity.getPlayers()).get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<Player> players = queryDocumentSnapshots.toObjects(Player.class);
-                        List<String> playerNames = new ArrayList<>();
-
-                        for (Player p : players) {
-                            playerNames.add(p.getName());
-
-                            if (p.getUid().equals(useruid)) {
+                            if (p.get(0).getUid().equalsIgnoreCase(useruid)) {
                                 signupButton.setEnabled(false);
                             }
                         }
-
-                        if (playerNames.isEmpty())
-                            playerNames.add("No players yet!");
-
-                        playerList.setAdapter(new ArrayAdapter<>(view.getContext(),
-                                android.R.layout.simple_list_item_1,
-                                playerNames));
                     }
                 });
+
+        if (!activity.getPlayers().isEmpty())
+            db.collection("players")
+                    .whereIn(FieldPath.documentId(), activity.getPlayers()).get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<Player> players = queryDocumentSnapshots.toObjects(Player.class);
+                            List<String> playerNames = new ArrayList<>();
+
+                            for (Player p : players) {
+                                playerNames.add(p.getName());
+
+                                if (p.getUid().equals(useruid)) {
+                                    signupButton.setEnabled(false);
+                                }
+                            }
+
+                            if (playerNames.isEmpty())
+                                playerNames.add("No players yet!");
+
+                            playerList.setAdapter(new ArrayAdapter<>(view.getContext(),
+                                    android.R.layout.simple_list_item_1,
+                                    playerNames));
+                        }
+                    });
     }
 }

@@ -2,15 +2,14 @@ package com.cbd.teammate.fragments.viewpagerfragments;
 
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.cbd.database.entities.Activity;
 import com.cbd.teammate.R;
@@ -88,17 +87,12 @@ public class MyActivitiesPageFragment extends Fragment {
     private void requestActivities() {
         String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().
                 getCurrentUser()).getUid();
-        db.collection("players")
-                .whereEqualTo("uid", currentUser).get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    String userId = queryDocumentSnapshots.iterator().next().getId();
-                    Query query = createQuery(userId);
-                    FirestoreRecyclerOptions<Activity> options = setOptions(query);
-                    setFirestoreRecyclerAdapter(options);
-                    activitiesList.setAdapter(firestoreRecyclerAdapter);
-                    if (firestoreRecyclerAdapter != null)
-                        firestoreRecyclerAdapter.startListening();
-                });
+        Query query = createQuery(currentUser);
+        FirestoreRecyclerOptions<Activity> options = setOptions(query);
+        setFirestoreRecyclerAdapter(options);
+        activitiesList.setAdapter(firestoreRecyclerAdapter);
+        if (firestoreRecyclerAdapter != null)
+            firestoreRecyclerAdapter.startListening();
     }
 
     private void setFirestoreRecyclerAdapter(FirestoreRecyclerOptions<Activity> options) {
@@ -122,7 +116,7 @@ public class MyActivitiesPageFragment extends Fragment {
 
     private Query createQuery(String userId) {
         return db.collection("activities")
-                .whereEqualTo("creatorid", userId);
+                .whereEqualTo("creatorId", userId);
     }
 
     private FirestoreRecyclerOptions<Activity> setOptions(Query query) {
