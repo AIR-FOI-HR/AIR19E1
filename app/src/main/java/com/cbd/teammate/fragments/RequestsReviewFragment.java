@@ -81,7 +81,7 @@ public class RequestsReviewFragment extends Fragment {
             protected void onBindViewHolder(@NonNull RequestViewHolder holder,
                                             int position, @NonNull Request model) {
                 try {
-                    holder.setDetails(model.getPlayer().getName(), model.getPlayerType(), model.getDescription(), model.getPlayer().getPhotoLink(), model);
+                    holder.setDetails(model);
                 } catch (Throwable oops) {
                     Toast.makeText(requestsView.getContext().getApplicationContext(),
                             "Oops! Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
