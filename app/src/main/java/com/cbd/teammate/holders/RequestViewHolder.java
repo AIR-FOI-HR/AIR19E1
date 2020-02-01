@@ -35,25 +35,27 @@ public class RequestViewHolder extends RecyclerView.ViewHolder {
         this.context = context;
     }
 
-    public void setDetails(String namePlayer, String level, String description, String pictureReference, Request request) {
+    public void setDetails(Request request) {
 
-        TextView venueName = view.findViewById(R.id.requesterName);
+        TextView PlayerName = view.findViewById(R.id.requesterName);
         TextView requestLevel = view.findViewById(R.id.requestLevel);
         this.accButton = view.findViewById(R.id.accept);
         this.decButton = view.findViewById(R.id.decline);
-
+        String pictureReference = request.getPlayer().getPhotoLink();
         TextView requestDescription = view.findViewById(R.id.requestDescription);
         CircleImageView imageView = view.findViewById(R.id.profileImage);
+        TextView acSport = view.findViewById(R.id.activityRequestSport);
+        TextView acDate = view.findViewById(R.id.activityRequestDate);
         if (pictureReference != null) {
             Picasso.get().load(pictureReference).into(imageView);
         } else {
             imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile_icon_black));
         }
-
-
-        venueName.setText(namePlayer);
-        requestDescription.setText(description);
-        requestLevel.setText(level);
+        acDate.setText(request.getActivity().getDate());
+        acSport.setText(request.getActivity().getSport());
+        PlayerName.setText(request.getPlayer().getName());
+        requestDescription.setText(request.getDescription());
+        requestLevel.setText(request.getPlayerType());
         accButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
