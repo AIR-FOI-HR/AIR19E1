@@ -20,7 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.HashMap;
 
-public class SignedActivity extends AppCompatActivity{
+public class SignedActivity extends AbstractActivity{
 
     private final static int ALL_PERMISSIONS_RESULT = 101;
     public LocationProvider lp;

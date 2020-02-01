@@ -31,7 +31,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AbstractActivity {
     private EditText inputEmail, inputPassword, inputPasswordConf;
     private ProgressBar progressBar;
 
