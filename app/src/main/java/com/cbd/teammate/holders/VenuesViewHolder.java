@@ -1,7 +1,9 @@
 package com.cbd.teammate.holders;
 
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,7 +18,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class VenuesViewHolder extends RecyclerView.ViewHolder {
 
@@ -30,7 +31,7 @@ public class VenuesViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setDetails(String nameVenue, Double latitude, Double longitude, String pictureReference, Pair<Double, Double> latLong) {
-
+        Log.d("HolderDetails", nameVenue +" " +latitude+ " "+ longitude);
         String finalUrl = "http://i.imgur.com/DvpvklR.png";
         try {
             finalUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + URLEncoder.encode(pictureReference, "UTF-8") + "&key=" + URLEncoder.encode(view.getResources().getString(R.string.api_key), "UTF-8");
@@ -42,7 +43,7 @@ public class VenuesViewHolder extends RecyclerView.ViewHolder {
         this.distance = calculator.calculateDistance(latitude, latLong.first, longitude, latLong.second);
 
         TextView venueDistance = view.findViewById(R.id.venue_card_distance);
-        CircleImageView imageView = view.findViewById(R.id.venueImage);
+        ImageView imageView = view.findViewById(R.id.venue_card_image);
         Picasso.get().load(finalUrl).into(imageView);
 
         venueName.setText(nameVenue);
@@ -51,6 +52,7 @@ public class VenuesViewHolder extends RecyclerView.ViewHolder {
         decimalFormat.setMaximumFractionDigits(2);
         venueDistance.setText(decimalFormat.format(distance) + " km");
     }
+
 
     public Double getDistance()
     {

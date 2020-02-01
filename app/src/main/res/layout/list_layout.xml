@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerInParent="true"
-        android:layout_toRightOf="@+id/venueImage"
+        android:layout_toEndOf="@+id/venueImage"
         android:padding="15sp">
 
         <TextView

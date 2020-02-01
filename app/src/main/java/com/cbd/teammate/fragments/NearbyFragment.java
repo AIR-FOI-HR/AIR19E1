@@ -13,13 +13,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cbd.core.VenueUtil;
 import com.cbd.database.entities.Venue;
 import com.cbd.maps.LocationProvider;
 import com.cbd.teammate.DistanceCalculator;
 import com.cbd.teammate.HashMapSort;
 import com.cbd.teammate.R;
 import com.cbd.teammate.holders.VenuesViewHolder;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,15 +29,14 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NearbyFragment extends Fragment implements NearbyRecyclerViewAdapter.ItemClickListener {
+public class NearbyFragment extends Fragment implements NearbyRecyclerViewAdapter.ItemClickListener, VenueUtil {
     private View venuesView;
-    private RecyclerView myVenuesView;
-    private FirestoreRecyclerAdapter<Venue, VenuesViewHolder> firestoreRecyclerAdapter;
     private LocationProvider lp;
     private ArrayList<String> toJson;
     private RecyclerView.Adapter adapter;
@@ -55,54 +54,10 @@ public class NearbyFragment extends Fragment implements NearbyRecyclerViewAdapte
         // Inflate the layout for this fragment
         venuesView = inflater.inflate(R.layout.fragment_nearby, container, false);
 
-        myVenuesView = venuesView.findViewById(R.id.recycler_view);
-        myVenuesView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        requestVenues();
         this.getAllVenues();
 
 
-        RecyclerView recyclerView = venuesView.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-
-
-        adapter = new RecyclerView.Adapter<VenuesViewHolder>() {
-            @NonNull
-            @Override
-            public VenuesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(R.layout.card_layout, parent, false);
-
-                return new VenuesViewHolder(view);
-            }
-
-            @Override
-            public void onBindViewHolder(@NonNull VenuesViewHolder holder, int position) {
-                for (Venue model:hashMapVenues.keySet()) {
-
-                    try {
-                        holder.setDetails(model.getName(), model.getLatitude(), model.getLongitude(), model.getPictureReference(), lp.getLatLng());
-                        onClickListener(holder.itemView, model);
-                    } catch (Throwable oops) {
-                        Toast.makeText(venuesView.getContext().getApplicationContext(),
-                                "Oops! Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public int getItemCount() {
-                return 0;
-            }
-        };
-       // adapter.listene
-        recyclerView.setAdapter(adapter);
         return venuesView;
-    }
-
-    private void requestVenues() {
-
     }
 
 
@@ -123,13 +78,13 @@ public class NearbyFragment extends Fragment implements NearbyRecyclerViewAdapte
             FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
                     .getSupportFragmentManager()
                     .beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_above_nav, new VenueViewFragment(model,lp));
+            fragmentTransaction.replace(R.id.fragment_above_nav, new VenueViewFragment(model, lp));
             fragmentTransaction.commit();
         });
     }
 
-
-    private void getAllVenues() {
+    @Override
+    public void getAllVenues() {
         FirebaseFirestore.getInstance()
                 .collection("venues")
                 .get()
@@ -150,11 +105,9 @@ public class NearbyFragment extends Fragment implements NearbyRecyclerViewAdapte
                         createObjects();
                     }
                 });
-
-
     }
 
-    private void createObjects() {
+    public void createObjects() {
 
         DistanceCalculator distanceCalculator = new DistanceCalculator();
         Double distance;
@@ -174,8 +127,49 @@ public class NearbyFragment extends Fragment implements NearbyRecyclerViewAdapte
         Log.d("HashValues", "HM: " + new Gson().toJson(hashMapVenues));
         hashMapVenues = HashMapSort.sort(hashMapVenues);
 
-    }
+        RecyclerView recyclerView = venuesView.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        setAdapter();
+
+        recyclerView.setAdapter(adapter);
+
+    }
+    public void setAdapter(){
+        adapter =  new RecyclerView.Adapter<VenuesViewHolder>() {
+            @NonNull
+            @Override
+            public VenuesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(R.layout.card_layout, parent, false);
+
+                return new VenuesViewHolder(view);
+            }
+
+            @Override
+            public void onBindViewHolder(@NonNull VenuesViewHolder holder, int position) {
+                Venue model;
+                List<Venue> venues = new ArrayList<>(hashMapVenues.keySet());
+                model = venues.get(position);
+                try {
+                    holder.setDetails(model.getName(), model.getLatitude(), model.getLongitude(), model.getPictureReference(), lp.getLatLng());
+                    onClickListener(holder.itemView, model);
+                } catch (Throwable oops) {
+                    Toast.makeText(venuesView.getContext().getApplicationContext(),
+                            "Oops! Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public int getItemCount() {
+
+                return hashMapVenues.size() - 1;
+            }
+        };
+
+    }
 
     @Override
     public void onItemClick(View view, int position) {
