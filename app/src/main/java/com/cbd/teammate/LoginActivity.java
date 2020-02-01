@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.w3c.dom.Text;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AbstractActivity {
 
     private EditText inputEmail, inputPassword;
     private FirebaseAuth mAuth;

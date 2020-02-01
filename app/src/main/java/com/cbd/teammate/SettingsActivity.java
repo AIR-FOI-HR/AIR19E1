@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AbstractActivity {
     private EditText phoneNumber;
     private Button saveSettings;
     private Button deleteAccount;

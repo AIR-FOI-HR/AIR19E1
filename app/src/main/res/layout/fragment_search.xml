@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,7 +18,7 @@
         android:layout_marginEnd="30dp"
         android:background="@drawable/search_layout"
         android:ems="10"
-        android:hint="🔎 Search venues"
+        android:hint="  ⌕   Search venues"
         android:inputType="textPersonName"
         android:padding="8dp"
         android:textColorHint="@color/corporate_orange_light"

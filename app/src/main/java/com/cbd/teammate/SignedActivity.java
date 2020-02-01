@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.cbd.database.entities.Venue;
 import com.cbd.maps.LocationProvider;
 import com.cbd.teammate.fragments.MyActivitiesFragment;
 import com.cbd.teammate.fragments.NearbyFragment;
@@ -17,11 +18,15 @@ import com.cbd.teammate.fragments.ProfileFragment;
 import com.cbd.teammate.fragments.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class SignedActivity extends AppCompatActivity {
+import java.util.HashMap;
+
+public class SignedActivity extends AbstractActivity{
 
     private final static int ALL_PERMISSIONS_RESULT = 101;
     public LocationProvider lp;
     private TextView nameofuser;
+    private HashMap<Venue, Double> hashMapVenues;
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -96,5 +101,13 @@ public class SignedActivity extends AppCompatActivity {
         super.onPause();
 
         lp.pauseLocationUpdates();
+    }
+
+    public HashMap<Venue, Double> getHashMapVenues() {
+        return this.hashMapVenues;
+    }
+
+    public void setHashMapVenues(HashMap<Venue, Double> hashMapVenues) {
+        this.hashMapVenues = hashMapVenues;
     }
 }

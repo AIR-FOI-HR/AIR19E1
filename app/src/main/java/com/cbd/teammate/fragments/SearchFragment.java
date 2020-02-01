@@ -41,7 +41,7 @@ import java.util.Objects;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment implements VenueUtil {
+public class SearchFragment extends Fragment implements VenueUtil{
 
     private List<String> list;
     private FirestoreRecyclerAdapter<Venue, VenuesViewHolder> firestoreRecyclerAdapter;
@@ -49,6 +49,8 @@ public class SearchFragment extends Fragment implements VenueUtil {
     private RecyclerView recyclerList;
     private LocationProvider lp;
     private View view;
+    private com.google.firebase.firestore.Query venueQuery;
+    private FirestoreRecyclerOptions<Venue> venueOptions;
 
     public SearchFragment(LocationProvider lp) {
         this.lp = lp;
@@ -106,11 +108,10 @@ public class SearchFragment extends Fragment implements VenueUtil {
                         }
                         // currently displays only first 10 results due to Firebase limitation
                         if (hits.length() != 0 && hits.length() <= 10) {
-                            com.google.firebase.firestore.Query query1 = createQuery();
+                            getAllVenues();
+                            setOptions(venueQuery);
 
-                            FirestoreRecyclerOptions<Venue> options = setOptions(query1);
-
-                            setFirestoreRecyclerAdapter(options);
+                                setAdapter();
 
                             if (firestoreRecyclerAdapter != null) {
                                 firestoreRecyclerAdapter.startListening();
@@ -130,7 +131,6 @@ public class SearchFragment extends Fragment implements VenueUtil {
 
     }
 
-    @Override
     public void onClickListener(View view, Venue model) {
         view.setOnClickListener(view1 -> {
             FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
@@ -142,8 +142,17 @@ public class SearchFragment extends Fragment implements VenueUtil {
     }
 
     @Override
-    public void setFirestoreRecyclerAdapter(FirestoreRecyclerOptions<Venue> options) {
-        firestoreRecyclerAdapter = new FirestoreRecyclerAdapter<Venue, VenuesViewHolder>(options) {
+    public void getAllVenues() {
+        venueQuery =  FirebaseFirestore.getInstance()
+                .collection("venues")
+                .whereIn("name", list)
+                .orderBy("name", com.google.firebase.firestore.Query.Direction.ASCENDING);
+    }
+
+
+    @Override
+    public void setAdapter() {
+        firestoreRecyclerAdapter = new FirestoreRecyclerAdapter<Venue, VenuesViewHolder>(this.venueOptions) {
             @Override
             protected void onBindViewHolder(@NonNull VenuesViewHolder holder, int position, @NonNull Venue model) {
                 try {
@@ -159,25 +168,16 @@ public class SearchFragment extends Fragment implements VenueUtil {
             public VenuesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater
                         .from(parent.getContext())
-                        .inflate(R.layout.list_layout, parent, false);
+                        .inflate(R.layout.card_layout, parent, false);
                 return new VenuesViewHolder(view);
             }
         };
     }
 
-    @Override
-    public com.google.firebase.firestore.Query createQuery() {
-        return FirebaseFirestore.getInstance()
-                .collection("venues")
-                .whereIn("name", list)
-                .orderBy("name", com.google.firebase.firestore.Query.Direction.ASCENDING);
-    }
 
-    @Override
-    public FirestoreRecyclerOptions<Venue> setOptions(com.google.firebase.firestore.Query query) {
-        return new FirestoreRecyclerOptions.Builder<Venue>()
+    public void setOptions(com.google.firebase.firestore.Query query) {
+        this.venueOptions =  new FirestoreRecyclerOptions.Builder<Venue>()
                 .setQuery(query, Venue.class)
                 .build();
     }
 }
-

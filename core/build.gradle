@@ -37,4 +37,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:21.3.0'
     implementation 'com.firebaseui:firebase-ui-firestore:6.1.0'
     implementation 'com.firebaseui:firebase-ui-database:3.2.2'
+    compile project(path: ':database')
 }
