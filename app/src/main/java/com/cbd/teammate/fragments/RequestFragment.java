@@ -38,7 +38,7 @@ public class RequestFragment extends Fragment implements AdapterView.OnItemSelec
     private boolean alreadyApplied;
     private LocationProvider LP;
 
-    public RequestFragment(Activity activity, Player player,LocationProvider lp) {
+    public RequestFragment(Activity activity, Player player, LocationProvider lp) {
         this.activity = activity;
         this.uId = activity.getCreatorId();
         this.player = player;
@@ -90,13 +90,12 @@ public class RequestFragment extends Fragment implements AdapterView.OnItemSelec
         return FirebaseFirestore.getInstance()
                 .collection("requests")
                 .whereEqualTo("activity", activity)
-                .whereEqualTo("player", player)
-                ;
+                .whereEqualTo("player", player);
     }
 
     private void DuplicateCheck() {
         com.google.firebase.firestore.Query query1 = createQuery();
-        query1.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>(){
+        query1.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 if (queryDocumentSnapshots.isEmpty()) {
@@ -112,8 +111,7 @@ public class RequestFragment extends Fragment implements AdapterView.OnItemSelec
                             .beginTransaction();
                     fragmentTransaction.replace(R.id.fragment_above_nav, new NearbyFragment(LP));
                     fragmentTransaction.commit();
-                }
-                else {
+                } else {
                     Toast.makeText(getContext(), "You are already registered!", Toast.LENGTH_SHORT).show();
                     FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
                             .getSupportFragmentManager()

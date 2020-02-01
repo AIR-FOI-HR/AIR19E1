@@ -73,10 +73,9 @@ public class SignedActivity extends AppCompatActivity {
                         selected = new SearchFragment(lp);
                         break;
                     case R.id.nav_mine:
-                        selected = new MyActivitiesFragment(getSupportFragmentManager());
+                        selected = new MyActivitiesFragment();
                         break;
                 }
-
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_above_nav, selected).commit();
 

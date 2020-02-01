@@ -137,7 +137,7 @@ public class ActivityViewFragment extends Fragment {
 
         if (!activity.getPlayers().isEmpty())
             db.collection("players")
-                    .whereIn(FieldPath.documentId(), activity.getPlayers()).get()
+                    .whereIn("uid", activity.getPlayers()).get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

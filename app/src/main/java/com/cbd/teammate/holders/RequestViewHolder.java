@@ -1,7 +1,6 @@
 package com.cbd.teammate.holders;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -9,16 +8,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cbd.database.entities.Activity;
 import com.cbd.database.entities.Request;
-import com.cbd.database.entities.Venue;
 import com.cbd.teammate.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -62,8 +60,8 @@ public class RequestViewHolder extends RecyclerView.ViewHolder {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 db.collection("requests")
                         .whereEqualTo("player", request.getPlayer())
-                        .whereEqualTo("uid",request.getUid())
-                        .whereEqualTo("accepted",false)
+                        .whereEqualTo("uid", request.getUid())
+                        .whereEqualTo("accepted", false)
                         .get()
                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
@@ -72,7 +70,32 @@ public class RequestViewHolder extends RecyclerView.ViewHolder {
                                 DocumentReference docRef = db.collection("requests")
                                         .document(queryDocumentSnapshots.getDocuments().get(0).getId());
                                 docRef.update("accepted", true);
-                                docRef.get();
+                                docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        Activity a = documentSnapshot.toObject(Request.class).getActivity();
+                                        db.collection("activities")
+                                                .whereEqualTo("creatorId", a.getCreatorId())
+                                                .whereEqualTo("date", a.getDate())
+                                                .whereEqualTo("description", a.getDescription())
+                                                .whereEqualTo("playersNeeded", a.getPlayersNeeded())
+                                                .whereEqualTo("playerType", a.getPlayerType())
+                                                .whereEqualTo("price", a.getPrice())
+                                                .whereEqualTo("sport", a.getSport()).get()
+                                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                        if (!queryDocumentSnapshots.isEmpty()) {
+                                                            Activity activity = queryDocumentSnapshots.iterator().next().toObject(Activity.class);
+                                                            activity.getPlayers().add(request.getPlayer().getUid());
+                                                            String activityDocId = queryDocumentSnapshots.iterator().next().getId();
+                                                            db.collection("activities").document(activityDocId)
+                                                                    .update("players", activity.getPlayers());
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                });
 
                             }
                         });
@@ -85,8 +108,8 @@ public class RequestViewHolder extends RecyclerView.ViewHolder {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 db.collection("requests")
                         .whereEqualTo("player", request.getPlayer())
-                        .whereEqualTo("uid",request.getUid())
-                        .whereEqualTo("accepted",false)
+                        .whereEqualTo("uid", request.getUid())
+                        .whereEqualTo("accepted", false)
                         .get()
                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
