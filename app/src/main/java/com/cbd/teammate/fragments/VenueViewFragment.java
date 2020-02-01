@@ -17,10 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cbd.database.entities.Activity;
 import com.cbd.database.entities.Venue;
+import com.cbd.maps.LocationProvider;
 import com.cbd.teammate.R;
 import com.cbd.teammate.holders.ActivityHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -43,10 +45,11 @@ public class VenueViewFragment extends Fragment {
     private Venue venue;
     private FirebaseFirestore db;
     private String newPicRef;
+    private LocationProvider lp;
 
-    public VenueViewFragment(Venue venue) {
-
+    public VenueViewFragment(Venue venue, LocationProvider lp) {
         this.venue = venue;
+        this.lp = lp;
     }
 
     @Override
@@ -59,6 +62,19 @@ public class VenueViewFragment extends Fragment {
 
         initialiseDB();
 
+        FloatingActionButton newActivity = view.findViewById(R.id.new_activity);
+        newActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction fragmentTransaction = getActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_above_nav,
+                        new NewActivityFragment(venue, lp));
+                fragmentTransaction.commit();
+            }
+        });
+
         if (venue != null) {
             setViewAttributes();
         }
@@ -67,7 +83,6 @@ public class VenueViewFragment extends Fragment {
     }
 
     private void initialiseDB() {
-
         db = FirebaseFirestore.getInstance();
     }
 
@@ -96,7 +111,7 @@ public class VenueViewFragment extends Fragment {
         TextView name = view.findViewById(R.id.venue_view_name);
         TextView lat = view.findViewById(R.id.venue_view_latitude);
         TextView lon = view.findViewById(R.id.venue_view_longitude);
-        ImageView image = view.findViewById(R.id.venue_view_image);
+        ImageView image = view.findViewById(R.id.venue_view_image_image);
         String url = this.createPictureUrl();
         configureVenueRecyclerView(venue.getActivities());
 
@@ -130,7 +145,7 @@ public class VenueViewFragment extends Fragment {
                                                 .getSupportFragmentManager()
                                                 .beginTransaction();
                                         fragmentTransaction.replace(R.id.fragment_above_nav,
-                                                new ActivityViewFragment(model, venue.getName(), newPicRef));
+                                                new ActivityViewFragment(model, venue.getName(), newPicRef, lp));
                                         fragmentTransaction.commit();
                                     }
                                 });
