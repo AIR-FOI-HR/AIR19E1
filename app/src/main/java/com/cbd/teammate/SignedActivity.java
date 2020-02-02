@@ -7,7 +7,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.cbd.database.entities.Venue;
@@ -20,7 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.HashMap;
 
-public class SignedActivity extends AbstractActivity{
+public class SignedActivity extends AbstractActivity {
 
     private final static int ALL_PERMISSIONS_RESULT = 101;
     public LocationProvider lp;
@@ -82,7 +81,10 @@ public class SignedActivity extends AbstractActivity{
                         break;
                 }
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_above_nav, selected).commit();
+                        .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left,
+                                R.anim.enter_left_to_right, R.anim.exit_left_to_right)
+                        .replace(R.id.fragment_above_nav, selected)
+                        .addToBackStack("main_fragment").commit();
 
                 return true;
             }

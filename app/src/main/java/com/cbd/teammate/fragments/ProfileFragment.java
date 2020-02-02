@@ -66,8 +66,8 @@ public class ProfileFragment extends Fragment {
         query1.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    numberOfRequests = queryDocumentSnapshots.size();
-                requests.setText("You have "+ numberOfRequests + "unreviewed requests!");
+                numberOfRequests = queryDocumentSnapshots.size();
+                requests.setText("You have " + numberOfRequests + "unreviewed requests!");
             }
         });
 
@@ -77,7 +77,7 @@ public class ProfileFragment extends Fragment {
         } else {
             textMail.setText(theUser.getEmail());
             textNumber.setText(theUser.getPhoneNumber());
-            requests.setText("You have "+ numberOfRequests + "unreviewed requests!");
+            requests.setText("You have " + numberOfRequests + "unreviewed requests!");
             if (theUser.getPhotoUrl() != null)
                 Picasso.get().load(theUser.getPhotoUrl()).into(profileImage);
             else
@@ -101,7 +101,9 @@ public class ProfileFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
                         .getSupportFragmentManager()
                         .beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_above_nav, new RequestsReviewFragment(lp));
+                fragmentTransaction
+                        .replace(R.id.fragment_above_nav, new RequestsReviewFragment(lp))
+                        .addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
@@ -114,8 +116,8 @@ public class ProfileFragment extends Fragment {
         FirebaseUser theUser = auth.getCurrentUser();
         return FirebaseFirestore.getInstance()
                 .collection("requests")
-                .whereEqualTo("uid",theUser.getUid())
-                .whereEqualTo("accepted",false)
+                .whereEqualTo("uid", theUser.getUid())
+                .whereEqualTo("accepted", false)
                 ;
     }
 

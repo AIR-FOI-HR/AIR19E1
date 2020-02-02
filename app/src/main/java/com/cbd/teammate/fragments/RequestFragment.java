@@ -115,7 +115,9 @@ public class RequestFragment extends Fragment implements AdapterView.OnItemSelec
                     Toast.makeText(getContext(), "You are already registered!", Toast.LENGTH_SHORT).show();
                     FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
                             .getSupportFragmentManager()
-                            .beginTransaction();
+                            .beginTransaction()
+                            .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left,
+                                    R.anim.enter_left_to_right, R.anim.exit_left_to_right);
                     fragmentTransaction.replace(R.id.fragment_above_nav, new NearbyFragment(LP));
                     fragmentTransaction.commit();
 

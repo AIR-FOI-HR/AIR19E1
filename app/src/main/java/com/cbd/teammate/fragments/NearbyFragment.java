@@ -75,10 +75,15 @@ public class NearbyFragment extends Fragment implements NearbyRecyclerViewAdapte
 
     public void onClickListener(View view, Venue model) {
         view.setOnClickListener(view1 -> {
+            Fragment newFragment = new VenueViewFragment(model, lp);
             FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
                     .getSupportFragmentManager()
                     .beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_above_nav, new VenueViewFragment(model, lp));
+            fragmentTransaction
+                    .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left,
+                            R.anim.enter_left_to_right, R.anim.exit_left_to_right)
+                    .replace(R.id.fragment_above_nav, newFragment)
+                    .addToBackStack(null);
             fragmentTransaction.commit();
         });
     }
@@ -135,8 +140,9 @@ public class NearbyFragment extends Fragment implements NearbyRecyclerViewAdapte
         recyclerView.setAdapter(adapter);
 
     }
-    public void setAdapter(){
-        adapter =  new RecyclerView.Adapter<VenuesViewHolder>() {
+
+    public void setAdapter() {
+        adapter = new RecyclerView.Adapter<VenuesViewHolder>() {
             @NonNull
             @Override
             public VenuesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
