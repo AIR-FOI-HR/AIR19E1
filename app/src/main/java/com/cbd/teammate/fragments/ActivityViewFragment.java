@@ -56,7 +56,6 @@ public class ActivityViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_activity_view, container, false);
-
         db = FirebaseFirestore.getInstance();
 
         setData();
@@ -97,7 +96,9 @@ public class ActivityViewFragment extends Fragment {
                             FragmentTransaction fragmentTransaction = Objects.requireNonNull(getActivity())
                                     .getSupportFragmentManager()
                                     .beginTransaction();
-                            fragmentTransaction.replace(R.id.fragment_above_nav, new RequestFragment(activity, player, lp));
+                            fragmentTransaction
+                                    .replace(R.id.fragment_above_nav, new RequestFragment(activity, player, lp))
+                                    .addToBackStack(null);
                             fragmentTransaction.commit();
                         }
                     });

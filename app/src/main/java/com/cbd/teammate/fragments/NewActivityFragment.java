@@ -154,7 +154,7 @@ public class NewActivityFragment extends Fragment {
         errorMessages = "";
 
         if (activitySport.getText().toString().isEmpty()) {
-            errorMessages += "Sport cannot be empty!";
+            errorMessages += "Sport cannot be empty!\n";
             res = false;
         }
 

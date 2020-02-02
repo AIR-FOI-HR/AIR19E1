@@ -69,9 +69,14 @@ public class VenueViewFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = getActivity()
                         .getSupportFragmentManager()
                         .beginTransaction();
+
+                fragmentTransaction.setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left,
+                        R.anim.enter_left_to_right, R.anim.exit_left_to_right);
+
                 fragmentTransaction.replace(R.id.fragment_above_nav,
                         new NewActivityFragment(venue, lp));
-                fragmentTransaction.commit();
+
+                fragmentTransaction.addToBackStack(null).commit();
             }
         });
 
@@ -143,10 +148,12 @@ public class VenueViewFragment extends Fragment {
                                     public void onClick(View view) {
                                         FragmentTransaction fragmentTransaction = getActivity()
                                                 .getSupportFragmentManager()
-                                                .beginTransaction();
+                                                .beginTransaction()
+                                                .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left,
+                                                        R.anim.enter_left_to_right, R.anim.exit_left_to_right);
                                         fragmentTransaction.replace(R.id.fragment_above_nav,
                                                 new ActivityViewFragment(model, venue.getName(), newPicRef, lp));
-                                        fragmentTransaction.commit();
+                                        fragmentTransaction.addToBackStack(null).commit();
                                     }
                                 });
                             }
